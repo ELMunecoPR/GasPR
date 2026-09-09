@@ -1,0 +1,15 @@
+{
+  "actualizado": "2026-09-09T01:48:12.908Z",
+  "regular": {
+    "minimo": 108.7,
+    "maximo": 114.7
+  },
+  "premium": {
+    "minimo": 122.7,
+    "maximo": 130.7
+  },
+  "diesel": {
+    "minimo": 138.7,
+    "maximo": 141.7
+  }
+}

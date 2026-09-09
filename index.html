@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GasPR</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .card {
+      background: white;
+      max-width: 400px;
+      margin: auto;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    }
+
+    h1 {
+      margin-bottom: 25px;
+    }
+
+    .precio {
+      font-size: 24px;
+      margin: 18px 0;
+    }
+
+    .fecha {
+      margin-top: 25px;
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <h1>GasPR</h1>
+
+    <div class="precio" id="regular">Regular: cargando...</div>
+    <div class="precio" id="premium">Premium: cargando...</div>
+    <div class="precio" id="diesel">Diesel: cargando...</div>
+
+    <div class="fecha" id="fecha"></div>
+  </div>
+
+  <script>
+    fetch("/api/precios")
+      .then(respuesta => respuesta.json())
+      .then(datos => {
+
+        document.getElementById("regular").textContent =
+          `Regular: ${datos.regular.minimo} - ${datos.regular.maximo} ¢/L`;
+
+        document.getElementById("premium").textContent =
+          `Premium: ${datos.premium.minimo} - ${datos.premium.maximo} ¢/L`;
+
+        document.getElementById("diesel").textContent =
+          `Diesel: ${datos.diesel.minimo} - ${datos.diesel.maximo} ¢/L`;
+
+        document.getElementById("fecha").textContent =
+          `Actualizado: ${new Date(datos.actualizado).toLocaleString()}`;
+      });
+  </script>
+
+</body>
+</html>
