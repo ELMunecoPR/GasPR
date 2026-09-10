@@ -83,6 +83,7 @@
   <option value="MAYAGUEZ">Mayagüez</option>
   <option value="RINCON">Rincón</option>
 </select>
+<button id="cercaDeMi">Cerca de mí</button>
 <h2>Gasolineras</h2>
 <div id="gasolineras"></div>
     <h2>Precios por marca</h2>
@@ -135,10 +136,12 @@ contenedorMarcas.innerHTML = datos.marcas
   `)
   .join("");
       });
+      let gasolinerasActuales = [];
      async function cargarGasolineras() {
   const municipio = document.getElementById("municipio").value;
   const respuesta = await fetch(`/api/gasolineras?municipio=${municipio}`);
   const gasolineras = await respuesta.json();
+  gasolinerasActuales = gasolineras;
   console.log(gasolineras);
   const contenedor = document.getElementById("gasolineras");
   contenedor.innerHTML = gasolineras
@@ -153,9 +156,53 @@ contenedorMarcas.innerHTML = datos.marcas
 `)
   .join("");
 }
+function calcularDistancia(lat1, lon1, lat2, lon2) {
+  const R = 3958.8;
+  const rad = grados => grados * Math.PI / 180;
 
+  const dLat = rad(lat2 - lat1);
+  const dLon = rad(lon2 - lon1);
+
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(rad(lat1)) *
+    Math.cos(rad(lat2)) *
+    Math.sin(dLon / 2) ** 2;
+
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
 cargarGasolineras();
 document.getElementById("municipio").addEventListener("change", cargarGasolineras);
+document.getElementById("cercaDeMi").addEventListener("click", () => {
+  navigator.geolocation.getCurrentPosition(posicion => {
+    const latitudUsuario = posicion.coords.latitude;
+    const longitudUsuario = posicion.coords.longitude;
+gasolinerasActuales = gasolinerasActuales
+  .map(estacion => {
+    estacion.distancia = calcularDistancia(
+      latitudUsuario,
+      longitudUsuario,
+      estacion.attributes.GPS_Latitu,
+      estacion.attributes.GPS_Longit
+    );
+
+    return estacion;
+  })
+  .sort((a, b) => a.distancia - b.distancia);
+  const contenedor = document.getElementById("gasolineras");
+  contenedor.innerHTML = gasolinerasActuales
+  .map(estacion => `
+    <div class="marca">
+      <strong>${estacion.attributes.Name}</strong><br>
+      ${estacion.distancia.toFixed(2)} millas<br>
+      <a href="https://www.google.com/maps?q=${estacion.attributes.GPS_Latitu},${estacion.attributes.GPS_Longit}" target="_blank">
+        Ver en mapa
+      </a>
+    </div>
+  `)
+  .join("");
+  });
+});
 
   </script>
 
