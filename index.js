@@ -7,7 +7,8 @@ app.use(express.static(__dirname))
 const PORT = 3001;
 
 async function obtenerPrecios() {
-  const url = "https://www.daco.pr.gov/";
+  const url ="https://www.daco.pr.gov/?53e8dab1_page=3&a551dcf7_page=2";
+
 
   const respuesta = await fetch(url);
   const html = await respuesta.text();
@@ -18,10 +19,34 @@ async function obtenerPrecios() {
     .text()
     .replace(/\s+/g, " ")
     .trim();
+console.log(texto.includes("Bomba"), texto.slice(0, 1000));
 
   const regular = texto.match(/Bomba\s*(\d{2,3}\.\d)\s*(\d{2,3}\.\d)\s*REGULAR/i);
   const premium = texto.match(/REGULAR\s*(\d{2,3}\.\d)\s*(\d{2,3}\.\d)\s*PREMIUM/i);
   const diesel = texto.match(/PREMIUM\s*(\d{2,3}\.\d)\s*(\d{2,3}\.\d)\s*DI[ÉE]SEL/i);
+  const marcas = [];
+  const pueblos = [];
+  const estaciones = [];
+  const preciosPorPueblo = {};
+  const marcasConocidas = [
+  "76",
+  "American",
+  "Bita's",
+  "EcoMaxx",
+  "Gulf",
+  "Mobil",
+  "Phillips 66",
+  "Puma",
+  "Shell",
+  "Sunoco",
+  "Texaco",
+  "T-Express",
+  "Total",
+  "Ultra Top Fuel"
+];
+for (const marca of marcasConocidas) {
+  console.log("Buscando marca:", marca);
+}
 
   return {
     actualizado: new Date().toISOString(),
