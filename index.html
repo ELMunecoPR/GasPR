@@ -36,6 +36,16 @@
       font-size: 14px;
       color: #666;
     }
+#marcas {
+    margin-top: 20px;
+}
+
+.marca {
+    padding: 15px;
+    margin-bottom: 12px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
   </style>
 </head>
 
@@ -49,6 +59,8 @@
     <div class="precio" id="diesel">Diesel: cargando...</div>
 
     <div class="fecha" id="fecha"></div>
+    <h2>Precios por marca</h2>
+    <div id="marcas"></div>
   </div>
 
   <script>
@@ -67,6 +79,17 @@
 
         document.getElementById("fecha").textContent =
           `Actualizado: ${new Date(datos.actualizado).toLocaleString()}`;
+          const contenedorMarcas = document.getElementById("marcas");
+
+contenedorMarcas.innerHTML = datos.marcas
+  .map(marca => `
+    <div class="marca">
+      ${marca.marca}: Regular ${marca.regular} ¢/L |
+      Premium ${marca.premium} ¢/L |
+      Diesel ${marca.diesel} ¢/L
+    </div>
+  `)
+  .join("");
       });
   </script>
 
