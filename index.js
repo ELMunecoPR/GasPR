@@ -7,23 +7,24 @@ app.use(express.static(__dirname))
 const PORT = 3001;
 
 async function obtenerPrecios() {
-  const url ="https://www.daco.pr.gov/?53e8dab1_page=3&a551dcf7_page=2";
+  const urlGeneral = "https://www.daco.pr.gov/?53e8dab1_page=3&a551dcf7_page=2";
+  const urlMarcas = "https://www.daco.pr.gov/recursos?342e6971_page=2&a4165446_page=2";
 
 
-  const respuesta = await fetch(url);
-  const html = await respuesta.text();
+  const respuestaGeneral = await fetch(urlGeneral);
+  const respuestaMarcas = await fetch(urlMarcas);
+  const htmlGeneral = await respuestaGeneral.text();
+  const htmlMarcas = await respuestaMarcas.text();
 
-  const $ = cheerio.load(html);
+  const $general = cheerio.load(htmlGeneral);
+  const $marcas = cheerio.load(htmlMarcas);
 
-  const texto = $("body")
-    .text()
-    .replace(/\s+/g, " ")
-    .trim();
-console.log(texto.includes("Bomba"), texto.slice(0, 1000));
+  const textoGeneral = $general("body").text().replace(/\s+/g, " ").trim();
+  const textoMarcas = $marcas("body").text().replace(/\s+/g, " ").trim();
 
-  const regular = texto.match(/Bomba\s*(\d{2,3}\.\d)\s*(\d{2,3}\.\d)\s*REGULAR/i);
-  const premium = texto.match(/REGULAR\s*(\d{2,3}\.\d)\s*(\d{2,3}\.\d)\s*PREMIUM/i);
-  const diesel = texto.match(/PREMIUM\s*(\d{2,3}\.\d)\s*(\d{2,3}\.\d)\s*DI[ÉE]SEL/i);
+  const regular = textoGeneral.match(/Bomba\s*(\d{2,3}\.\d)\s*(\d{2,3}\.\d)\s*REGULAR/i);
+  const premium = textoGeneral.match(/REGULAR\s*(\d{2,3}\.\d)\s*(\d{2,3}\.\d)\s*PREMIUM/i);
+  const diesel = textoGeneral.match(/PREMIUM\s*(\d{2,3}\.\d)\s*(\d{2,3}\.\d)\s*DI[ÉE]SEL/i);
   const marcas = [];
   const pueblos = [];
   const estaciones = [];
@@ -44,12 +45,29 @@ console.log(texto.includes("Bomba"), texto.slice(0, 1000));
   "Total",
   "Ultra Top Fuel"
 ];
+console.log("Marcas cargadas:", marcasConocidas.length);
 for (const marca of marcasConocidas) {
-  console.log("Buscando marca:", marca);
-}
+  const nombreSeguro = marca.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
+  const patron = new RegExp(
+    `${nombreSeguro}(\\d{2,3}\\.\\d)Regular(\\d{2,3}\\.\\d)Premium(\\d{2,3}\\.\\d)Di[ée]sel`,
+    "i"
+  );
+
+  const resultado = textoMarcas.match(patron);
+
+  if (resultado) {
+    marcas.push({
+      marca: marca,
+      regular: Number(resultado[1]),
+      premium: Number(resultado[2]),
+      diesel: Number(resultado[3])
+    });
+  }
+}
   return {
     actualizado: new Date().toISOString(),
+    marcas: marcas,
     regular: {
       minimo: regular ? Number(regular[1]) : null,
       maximo: regular ? Number(regular[2]) : null
