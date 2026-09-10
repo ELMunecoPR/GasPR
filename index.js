@@ -5,8 +5,19 @@ const cheerio = require("cheerio");
 const app = express();
 app.use(express.static(__dirname))
 const PORT = 3001;
+const URL_GASOLINERAS = "https://sigejp.pr.gov/server/rest/services/Public_Assets/public_assets_5142019/FeatureServer/0/query";
+async function obtenerGasolineras(municipio) {
+const parametros = new URLSearchParams();
+parametros.append("where", `UPPER(City)='${municipio.toUpperCase()}'`);
+parametros.append("outFields", "Name,City,GPS_Latitu,GPS_Longit");
+parametros.append("f", "json");
+const respuesta = await fetch(`${URL_GASOLINERAS}?${parametros.toString()}`);
+const datos = await respuesta.json();
+return datos.features;
+}
 
 async function obtenerPrecios() {
+
   const urlGeneral = "https://www.daco.pr.gov/?53e8dab1_page=3&a551dcf7_page=2";
   const urlMarcas = "https://www.daco.pr.gov/recursos?342e6971_page=2&a4165446_page=2";
 
@@ -82,7 +93,17 @@ for (const marca of marcasConocidas) {
     }
   };
 }
-
+app.get("/api/gasolineras", async (req, res) => {
+  try {
+    const municipio = req.query.municipio || "AGUADILLA";
+const gasolineras = await obtenerGasolineras(municipio);
+    res.json(gasolineras);
+  } catch (error) {
+    res.status(500).json({
+      error: "No se pudieron obtener las gasolineras"
+    });
+  }
+});
 app.get("/api/precios", async (req, res) => {
   try {
     const precios = await obtenerPrecios();
