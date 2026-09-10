@@ -46,6 +46,25 @@
     border: 1px solid #ddd;
     border-radius: 10px;
 }
+.combustibles {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+.combustibles > div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.combustibles b {
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+.combustibles small {
+    font-size: 12px;
+    color: #666;
+}
   </style>
 </head>
 
@@ -83,11 +102,29 @@
 
 contenedorMarcas.innerHTML = datos.marcas
   .map(marca => `
-    <div class="marca">
-      ${marca.marca}: Regular ${marca.regular} ¢/L |
-      Premium ${marca.premium} ¢/L |
-      Diesel ${marca.diesel} ¢/L
+   <div class="marca">
+  <strong>${marca.marca}</strong>
+
+  <div class="combustibles">
+    <div>
+      <span>Regular</span>
+      <b>${marca.regular}</b>
+      <small>¢/L</small>
     </div>
+
+    <div>
+      <span>Premium</span>
+      <b>${marca.premium}</b>
+      <small>¢/L</small>
+    </div>
+
+    <div>
+      <span>Diesel</span>
+      <b>${marca.diesel}</b>
+      <small>¢/L</small>
+    </div>
+  </div>
+</div>
   `)
   .join("");
       });
