@@ -174,9 +174,13 @@ function calcularDistancia(lat1, lon1, lat2, lon2) {
 cargarGasolineras();
 document.getElementById("municipio").addEventListener("change", cargarGasolineras);
 document.getElementById("cercaDeMi").addEventListener("click", () => {
-  navigator.geolocation.getCurrentPosition(posicion => {
+  navigator.geolocation.getCurrentPosition(async posicion => {
     const latitudUsuario = posicion.coords.latitude;
     const longitudUsuario = posicion.coords.longitude;
+
+    const respuesta = await fetch("/api/gasolineras?todas=1");
+gasolinerasActuales = await respuesta.json();
+
 gasolinerasActuales = gasolinerasActuales
   .map(estacion => {
     estacion.distancia = calcularDistancia(

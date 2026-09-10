@@ -8,7 +8,11 @@ const PORT = 3001;
 const URL_GASOLINERAS = "https://sigejp.pr.gov/server/rest/services/Public_Assets/public_assets_5142019/FeatureServer/0/query";
 async function obtenerGasolineras(municipio) {
 const parametros = new URLSearchParams();
-parametros.append("where", `UPPER(City)='${municipio.toUpperCase()}'`);
+const filtro = municipio
+  ? `UPPER(City)='${municipio.toUpperCase()}'`
+  : "1=1";
+
+parametros.append("where", filtro);
 parametros.append("outFields", "Name,City,GPS_Latitu,GPS_Longit");
 parametros.append("f", "json");
 const respuesta = await fetch(`${URL_GASOLINERAS}?${parametros.toString()}`);
@@ -95,8 +99,9 @@ for (const marca of marcasConocidas) {
 }
 app.get("/api/gasolineras", async (req, res) => {
   try {
-    const municipio = req.query.municipio || "AGUADILLA";
-const gasolineras = await obtenerGasolineras(municipio);
+    const todas = req.query.todas === "1";
+const municipio = todas ? null : (req.query.municipio || "AGUADILLA");
+    const gasolineras = await obtenerGasolineras(municipio);
     res.json(gasolineras);
   } catch (error) {
     res.status(500).json({
