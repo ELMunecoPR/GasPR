@@ -142,7 +142,15 @@ contenedorMarcas.innerHTML = datos.marcas
   console.log(gasolineras);
   const contenedor = document.getElementById("gasolineras");
   contenedor.innerHTML = gasolineras
-  .map(estacion => `<div class="marca"><strong>${estacion.attributes.Name}</strong><br>${estacion.attributes.City}</div>`)
+  .map(estacion => `
+  <div class="marca">
+    <strong>${estacion.attributes.Name}</strong><br>
+    ${estacion.attributes.City}<br>
+    <a href="https://www.google.com/maps?q=${estacion.attributes.GPS_Latitu},${estacion.attributes.GPS_Longit}" target="_blank">
+      Ver en mapa
+    </a>
+  </div>
+`)
   .join("");
 }
 
