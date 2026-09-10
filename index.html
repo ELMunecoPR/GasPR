@@ -193,6 +193,7 @@ gasolinerasActuales = gasolinerasActuales
     return estacion;
   })
   .sort((a, b) => a.distancia - b.distancia);
+  gasolinerasActuales = gasolinerasActuales.slice(0, 10);
   const contenedor = document.getElementById("gasolineras");
   contenedor.innerHTML = gasolinerasActuales
   .map(estacion => `
