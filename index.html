@@ -78,12 +78,19 @@
     <div class="precio" id="diesel">Diesel: cargando...</div>
 
     <div class="fecha" id="fecha"></div>
+    <select id="municipio">
+  <option value="AGUADILLA">Aguadilla</option>
+  <option value="MAYAGUEZ">Mayagüez</option>
+  <option value="RINCON">Rincón</option>
+</select>
+<h2>Gasolineras</h2>
+<div id="gasolineras"></div>
     <h2>Precios por marca</h2>
     <div id="marcas"></div>
   </div>
 
   <script>
-    fetch("/api/precios")
+ fetch("/api/precios")
       .then(respuesta => respuesta.json())
       .then(datos => {
 
@@ -128,6 +135,20 @@ contenedorMarcas.innerHTML = datos.marcas
   `)
   .join("");
       });
+     async function cargarGasolineras() {
+  const municipio = document.getElementById("municipio").value;
+  const respuesta = await fetch(`/api/gasolineras?municipio=${municipio}`);
+  const gasolineras = await respuesta.json();
+  console.log(gasolineras);
+  const contenedor = document.getElementById("gasolineras");
+  contenedor.innerHTML = gasolineras
+  .map(estacion => `<div class="marca"><strong>${estacion.attributes.Name}</strong><br>${estacion.attributes.City}</div>`)
+  .join("");
+}
+
+cargarGasolineras();
+document.getElementById("municipio").addEventListener("change", cargarGasolineras);
+
   </script>
 
 </body>
