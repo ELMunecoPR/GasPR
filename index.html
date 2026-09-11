@@ -149,10 +149,85 @@
     <div class="fecha" id="fecha"></div>
     <div class="controles">
   <select id="municipio">
-    <option value="AGUADILLA">Aguadilla</option>
+    <option value="ADJUNTAS">Adjuntas</option>
+    <option value="AGUADA">Aguada</option>
+    <option value="AGUADILLA" selected>Aguadilla</option>
+    <option value="AGUAS BUENAS">Aguas Buenas</option>
+    <option value="AIBONITO">Aibonito</option>
+    <option value="ANASCO">Añasco</option>
+    <option value="ARECIBO">Arecibo</option>
+    <option value="ARROYO">Arroyo</option>
+    <option value="BARCELONETA">Barceloneta</option>
+    <option value="BARRANQUITAS">Barranquitas</option>
+    <option value="BAYAMON">Bayamón</option>
+    <option value="CABO ROJO">Cabo Rojo</option>
+    <option value="CAGUAS">Caguas</option>
+    <option value="CAMUY">Camuy</option>
+    <option value="CANOVANAS">Canóvanas</option>
+    <option value="CAROLINA">Carolina</option>
+    <option value="CATANO">Cataño</option>
+    <option value="CAYEY">Cayey</option>
+    <option value="CEIBA">Ceiba</option>
+    <option value="CIALES">Ciales</option>
+    <option value="CIDRA">Cidra</option>
+    <option value="COAMO">Coamo</option>
+    <option value="COMERIO">Comerío</option>
+    <option value="COROZAL">Corozal</option>
+    <option value="CULEBRA">Culebra</option>
+    <option value="DORADO">Dorado</option>
+    <option value="FAJARDO">Fajardo</option>
+    <option value="FLORIDA">Florida</option>
+    <option value="GUANICA">Guánica</option>
+    <option value="GUAYAMA">Guayama</option>
+    <option value="GUAYANILLA">Guayanilla</option>
+    <option value="GUAYNABO">Guaynabo</option>
+    <option value="GURABO">Gurabo</option>
+    <option value="HATILLO">Hatillo</option>
+    <option value="HORMIGUEROS">Hormigueros</option>
+    <option value="HUMACAO">Humacao</option>
+    <option value="ISABELA">Isabela</option>
+    <option value="JAYUYA">Jayuya</option>
+    <option value="JUANA DIAZ">Juana Díaz</option>
+    <option value="JUNCOS">Juncos</option>
+    <option value="LAJAS">Lajas</option>
+    <option value="LARES">Lares</option>
+    <option value="LAS MARIAS">Las Marías</option>
+    <option value="LAS PIEDRAS">Las Piedras</option>
+    <option value="LOIZA">Loíza</option>
+    <option value="LUQUILLO">Luquillo</option>
+    <option value="MANATI">Manatí</option>
+    <option value="MARICAO">Maricao</option>
+    <option value="MAUNABO">Maunabo</option>
     <option value="MAYAGUEZ">Mayagüez</option>
+    <option value="MOCA">Moca</option>
+    <option value="MOROVIS">Morovis</option>
+    <option value="NAGUABO">Naguabo</option>
+    <option value="NARANJITO">Naranjito</option>
+    <option value="OROCOVIS">Orocovis</option>
+    <option value="PATILLAS">Patillas</option>
+    <option value="PENUELAS">Peñuelas</option>
+    <option value="PONCE">Ponce</option>
+    <option value="QUEBRADILLAS">Quebradillas</option>
     <option value="RINCON">Rincón</option>
-  </select>
+    <option value="RIO GRANDE">Río Grande</option>
+    <option value="SABANA GRANDE">Sabana Grande</option>
+    <option value="SALINAS">Salinas</option>
+    <option value="SAN GERMAN">San Germán</option>
+    <option value="SAN JUAN">San Juan</option>
+    <option value="SAN LORENZO">San Lorenzo</option>
+    <option value="SAN SEBASTIAN">San Sebastián</option>
+    <option value="SANTA ISABEL">Santa Isabel</option>
+    <option value="TOA ALTA">Toa Alta</option>
+    <option value="TOA BAJA">Toa Baja</option>
+    <option value="TRUJILLO ALTO">Trujillo Alto</option>
+    <option value="UTUADO">Utuado</option>
+    <option value="VEGA ALTA">Vega Alta</option>
+    <option value="VEGA BAJA">Vega Baja</option>
+    <option value="VIEQUES">Vieques</option>
+    <option value="VILLALBA">Villalba</option>
+    <option value="YABUCOA">Yabucoa</option>
+    <option value="YAUCO">Yauco</option>
+</select>
 
   <button id="cercaDeMi">Buscar cerca de mí</button>
 </div>
@@ -214,7 +289,7 @@ contenedorMarcas.innerHTML = datos.marcas
   const respuesta = await fetch(`/api/gasolineras?municipio=${municipio}`);
   const gasolineras = await respuesta.json();
   gasolinerasActuales = gasolineras;
-  console.log(gasolineras);
+  
   const contenedor = document.getElementById("gasolineras");
   contenedor.innerHTML = gasolineras
   .map(estacion => `
