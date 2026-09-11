@@ -22,9 +22,20 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.15);
     }
 
-    h1 {
-      margin-bottom: 25px;
-    }
+    .app-header {
+    margin-bottom: 25px;
+}
+
+.app-header h1 {
+    margin: 0;
+    font-size: 38px;
+}
+
+.app-header p {
+    margin: 6px 0 0;
+    color: #666;
+    font-size: 15px;
+}
 
     .precio {
       font-size: 24px;
@@ -36,15 +47,55 @@
       font-size: 14px;
       color: #666;
     }
+
+    .controles {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0 25px;
+}
+
+.controles select {
+    flex: 1;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: white;
+}
+
+#cercaDeMi {
+    padding: 12px 18px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    background: #007aff;
+    color: white;
+    cursor: pointer;
+}
+
+.boton-mapa {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 9px 16px;
+    background: #f0f6ff;
+    color: #007aff;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 9px;
+}
+
 #marcas {
     margin-top: 20px;
 }
 
 .marca {
-    padding: 15px;
-    margin-bottom: 12px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 14px;
+    border: 1px solid #e5e5e5;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 .combustibles {
     display: flex;
@@ -71,19 +122,25 @@
 <body>
 
   <div class="card">
-    <h1>GasPR</h1>
+    <div class="app-header">
+  <h1>GasPR</h1>
+  <p>Encuentra gasolina cerca de ti</p>
+</div>
 
     <div class="precio" id="regular">Regular: cargando...</div>
     <div class="precio" id="premium">Premium: cargando...</div>
     <div class="precio" id="diesel">Diesel: cargando...</div>
 
     <div class="fecha" id="fecha"></div>
-    <select id="municipio">
-  <option value="AGUADILLA">Aguadilla</option>
-  <option value="MAYAGUEZ">Mayagüez</option>
-  <option value="RINCON">Rincón</option>
-</select>
-<button id="cercaDeMi">Cerca de mí</button>
+    <div class="controles">
+  <select id="municipio">
+    <option value="AGUADILLA">Aguadilla</option>
+    <option value="MAYAGUEZ">Mayagüez</option>
+    <option value="RINCON">Rincón</option>
+  </select>
+
+  <button id="cercaDeMi">Cerca de mí</button>
+</div>
 <h2>Gasolineras</h2>
 <div id="gasolineras"></div>
     <h2>Precios por marca</h2>
@@ -149,7 +206,7 @@ contenedorMarcas.innerHTML = datos.marcas
   <div class="marca">
     <strong>${estacion.attributes.Name}</strong><br>
     ${estacion.attributes.City}<br>
-    <a href="https://www.google.com/maps?q=${estacion.attributes.GPS_Latitu},${estacion.attributes.GPS_Longit}" target="_blank">
+    <a href="https://www.google.com/maps?q=${estacion.attributes.GPS_Latitu},${estacion.attributes.GPS_Longit}" target="_blank"class="boton-mapa">
       Ver en mapa
     </a>
   </div>
@@ -200,7 +257,7 @@ gasolinerasActuales = gasolinerasActuales
     <div class="marca">
       <strong>${estacion.attributes.Name}</strong><br>
       ${estacion.distancia.toFixed(2)} millas<br>
-      <a href="https://www.google.com/maps?q=${estacion.attributes.GPS_Latitu},${estacion.attributes.GPS_Longit}" target="_blank">
+      <a href="https://www.google.com/maps?q=${estacion.attributes.GPS_Latitu},${estacion.attributes.GPS_Longit}" target="_blank" class="boton-mapa">
         Ver en mapa
       </a>
     </div>
