@@ -330,6 +330,8 @@ document.getElementById("cercaDeMi").addEventListener("click", () => {
   navigator.geolocation.getCurrentPosition(async posicion => {
     const latitudUsuario = posicion.coords.latitude;
     const longitudUsuario = posicion.coords.longitude;
+    const municipioSelect = document.getElementById("municipio");
+municipioSelect.value = "";
 
     const respuesta = await fetch("/api/gasolineras?todas=1");
 gasolinerasActuales = await respuesta.json();
@@ -347,6 +349,9 @@ gasolinerasActuales = gasolinerasActuales
   })
   .sort((a, b) => a.distancia - b.distancia);
   gasolinerasActuales = gasolinerasActuales.slice(0, 10);
+  if (gasolinerasActuales.length > 0) {
+  municipioSelect.value = gasolinerasActuales[0].attributes.City;
+}
   const contenedor = document.getElementById("gasolineras");
   contenedor.innerHTML = gasolinerasActuales
   .map((estacion, index) => `
@@ -360,7 +365,10 @@ gasolinerasActuales = gasolinerasActuales
     </div>
   `)
   .join("");
-  });
+  },
+error => {
+  alert("No pudimos obtener tu ubicación. Verifica que tengas la ubicación activada y dale permiso a GasPR.");
+});
 });
 
   </script>

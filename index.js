@@ -17,7 +17,7 @@ parametros.append("outFields", "Name,City,GPS_Latitu,GPS_Longit");
 parametros.append("f", "json");
 const respuesta = await fetch(`${URL_GASOLINERAS}?${parametros.toString()}`);
 const datos = await respuesta.json();
-console.log(datos);
+
 return datos.features || [];
 }
 
