@@ -233,6 +233,7 @@
   <button id="cercaDeMi">Buscar cerca de mí</button>
 </div>
 <h2>Gasolineras cerca de ti</h2>
+<p id="contadorGasolineras"></p>
 <div id="gasolineras"></div>
     <h2>Precios por marca</h2>
     <div id="marcas"></div>
@@ -295,6 +296,8 @@ contenedorMarcas.innerHTML = datos.marcas
   const respuesta = await fetch(`/api/gasolineras?municipio=${municipio}`);
   const gasolineras = await respuesta.json();
   gasolinerasActuales = gasolineras;
+  document.getElementById("contadorGasolineras").textContent =
+  `${gasolineras.length} gasolineras en ${municipio}`;
   
   const contenedor = document.getElementById("gasolineras");
   contenedor.innerHTML = gasolineras
@@ -349,6 +352,8 @@ gasolinerasActuales = gasolinerasActuales
   })
   .sort((a, b) => a.distancia - b.distancia);
   gasolinerasActuales = gasolinerasActuales.slice(0, 10);
+  document.getElementById("contadorGasolineras").textContent =
+  `${gasolinerasActuales.length} gasolineras cerca de ti`;
   if (gasolinerasActuales.length > 0) {
   municipioSelect.value = gasolinerasActuales[0].attributes.City;
 }
