@@ -17,7 +17,8 @@ parametros.append("outFields", "Name,City,GPS_Latitu,GPS_Longit");
 parametros.append("f", "json");
 const respuesta = await fetch(`${URL_GASOLINERAS}?${parametros.toString()}`);
 const datos = await respuesta.json();
-return datos.features;
+console.log(datos);
+return datos.features || [];
 }
 
 async function obtenerPrecios() {
@@ -100,7 +101,7 @@ for (const marca of marcasConocidas) {
 app.get("/api/gasolineras", async (req, res) => {
   try {
     const todas = req.query.todas === "1";
-const municipio = todas ? null : (req.query.municipio || "AGUADILLA");
+    const municipio = todas ? null : (req.query.municipio || "AGUADILLA");
     const gasolineras = await obtenerGasolineras(municipio);
     res.json(gasolineras);
   } catch (error) {

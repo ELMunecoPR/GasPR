@@ -88,6 +88,21 @@
 #marcas {
     margin-top: 20px;
 }
+.marca.mas-cercana {
+    border: 2px solid #007aff;
+    background: #f0f7ff;
+}
+
+.etiqueta-cercana {
+    display: inline-block;
+    background: #007aff;
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
 
 .marca {
     padding: 18px;
@@ -253,12 +268,13 @@ gasolinerasActuales = gasolinerasActuales
   gasolinerasActuales = gasolinerasActuales.slice(0, 10);
   const contenedor = document.getElementById("gasolineras");
   contenedor.innerHTML = gasolinerasActuales
-  .map(estacion => `
-    <div class="marca">
+  .map((estacion, index) => `
+    <div class="marca ${index === 0 ? "mas-cercana" : ""}">
+      ${index === 0 ? '<div class="etiqueta-cercana">Más cercana</div>' : ''}
       <strong>${estacion.attributes.Name}</strong><br>
       ${estacion.distancia.toFixed(2)} millas<br>
-      <a href="https://www.google.com/maps?q=${estacion.attributes.GPS_Latitu},${estacion.attributes.GPS_Longit}" target="_blank" class="boton-mapa">
-        Ver en mapa
+      <a href="https://www.google.com/maps/dir/?api=1&origin=${latitudUsuario}%2C${longitudUsuario}&destination=${estacion.attributes.GPS_Latitu}%2C${estacion.attributes.GPS_Longit}&travelmode=driving" target="_blank">
+        Cómo llegar
       </a>
     </div>
   `)
