@@ -149,9 +149,10 @@
     <div class="fecha" id="fecha"></div>
     <div class="controles">
   <select id="municipio">
+    <option value="" selected>Selecciona un municipio</option>
     <option value="ADJUNTAS">Adjuntas</option>
     <option value="AGUADA">Aguada</option>
-    <option value="AGUADILLA" selected>Aguadilla</option>
+    <option value="AGUADILLA">Aguadilla</option>
     <option value="AGUAS BUENAS">Aguas Buenas</option>
     <option value="AIBONITO">Aibonito</option>
     <option value="ANASCO">Añasco</option>
@@ -285,6 +286,11 @@ contenedorMarcas.innerHTML = datos.marcas
       });
       let gasolinerasActuales = [];
      async function cargarGasolineras() {
+        const municipioSeleccionado = document.getElementById("municipio").value;
+
+  if (!municipioSeleccionado) {
+    return;
+  }
   const municipio = document.getElementById("municipio").value;
   const respuesta = await fetch(`/api/gasolineras?municipio=${municipio}`);
   const gasolineras = await respuesta.json();
