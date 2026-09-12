@@ -1,11 +1,45 @@
+require("dotenv").config();
+
 const path = require("path");
 const express = require("express");
 const cheerio = require("cheerio");
+const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
 const app = express();
 app.use(express.static(__dirname))
 const PORT = 3001;
 const URL_GASOLINERAS = "https://sigejp.pr.gov/server/rest/services/Public_Assets/public_assets_5142019/FeatureServer/0/query";
+async function obtenerGasolinerasGoogle(latitud, longitud, radio = 5000) {
+  const respuesta = await fetch(
+    "https://places.googleapis.com/v1/places:searchNearby",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Goog-Api-Key": GOOGLE_MAPS_API_KEY,
+        "X-Goog-FieldMask":
+          "places.id,places.displayName,places.formattedAddress,places.location"
+      },
+      body: JSON.stringify({
+        includedTypes: ["gas_station"],
+        maxResultCount: 20,
+        locationRestriction: {
+          circle: {
+            center: {
+              latitude: latitud,
+              longitude: longitud
+            },
+            radius: radio
+          }
+        }
+      })
+    }
+  );
+
+  const datos = await respuesta.json();
+
+  return datos.places || [];
+}
 async function obtenerGasolineras(municipio) {
 const parametros = new URLSearchParams();
 const filtro = municipio
@@ -97,7 +131,24 @@ for (const marca of marcasConocidas) {
       maximo: diesel ? Number(diesel[2]) : null
     }
   };
-}
+} 
+app.get("/api/gasolineras-google", async (req, res) => {
+  try {
+    const latitud = Number(req.query.lat);
+    const longitud = Number(req.query.lng);
+
+    const gasolineras = await obtenerGasolinerasGoogle(
+      latitud,
+      longitud
+    );
+
+    res.json(gasolineras);
+  } catch (error) {
+    res.status(500).json({
+      error: "No se pudieron obtener las gasolineras de Google"
+    });
+  }
+});
 app.get("/api/gasolineras", async (req, res) => {
   try {
     const todas = req.query.todas === "1";

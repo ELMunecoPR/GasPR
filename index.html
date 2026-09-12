@@ -336,7 +336,9 @@ document.getElementById("cercaDeMi").addEventListener("click", () => {
     const municipioSelect = document.getElementById("municipio");
 municipioSelect.value = "";
 
-    const respuesta = await fetch("/api/gasolineras?todas=1");
+    const respuesta = await fetch(
+  `/api/gasolineras-google?lat=${latitudUsuario}&lng=${longitudUsuario}`
+);
 gasolinerasActuales = await respuesta.json();
 
 gasolinerasActuales = gasolinerasActuales
@@ -344,8 +346,8 @@ gasolinerasActuales = gasolinerasActuales
     estacion.distancia = calcularDistancia(
       latitudUsuario,
       longitudUsuario,
-      estacion.attributes.GPS_Latitu,
-      estacion.attributes.GPS_Longit
+      estacion.location.latitude,
+      estacion.location.longitude
     );
 
     return estacion;
@@ -355,16 +357,16 @@ gasolinerasActuales = gasolinerasActuales
   document.getElementById("contadorGasolineras").textContent =
   `${gasolinerasActuales.length} gasolineras cerca de ti`;
   if (gasolinerasActuales.length > 0) {
-  municipioSelect.value = gasolinerasActuales[0].attributes.City;
+  municipioSelect.value = "";
 }
   const contenedor = document.getElementById("gasolineras");
   contenedor.innerHTML = gasolinerasActuales
   .map((estacion, index) => `
     <div class="marca ${index === 0 ? "mas-cercana" : ""}">
       ${index === 0 ? '<div class="etiqueta-cercana">Más cercana</div>' : ''}
-      <strong>${estacion.attributes.Name}</strong><br>
+      <strong>${estacion.displayName.text}</strong><br>
       ${estacion.distancia.toFixed(2)} millas<br>
-      <a href="https://www.google.com/maps/dir/?api=1&origin=${latitudUsuario}%2C${longitudUsuario}&destination=${estacion.attributes.GPS_Latitu}%2C${estacion.attributes.GPS_Longit}&travelmode=driving" target="_blank">
+      <a href="https://www.google.com/maps/dir/?api=1&origin=${latitudUsuario}%2C${longitudUsuario}&destination=${estacion.location.latitude}%2C${estacion.location.longitude}&travelmode=driving" target="_blank">
         Cómo llegar
       </a>
     </div>
