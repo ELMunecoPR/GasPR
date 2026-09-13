@@ -6,41 +6,134 @@
   <title>GasPR</title>
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      text-align: center;
-      padding: 40px;
-    }
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    text-align: center;
+    background:
+    radial-gradient(circle at 18% 22%, rgba(255,255,255,0.78) 0 4%, transparent 5%),
+    radial-gradient(circle at 24% 24%, rgba(255,255,255,0.72) 0 5%, transparent 6%),
+    radial-gradient(circle at 78% 18%, rgba(255,255,255,0.75) 0 4%, transparent 5%),
+    radial-gradient(circle at 84% 21%, rgba(255,255,255,0.68) 0 5%, transparent 6%),
+    linear-gradient(180deg, #8fd4ff 0%, #c7ebff 55%, #eaf8ff 100%);
+        
+}
 
-    .card {
-      background: white;
-      max-width: 400px;
-      margin: auto;
-      padding: 25px;
-      border-radius: 16px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-    }
+.card {
+    width: 100%;
+    max-width: 430px;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 28px 18px 50px;
+    box-sizing: border-box;
+    background: transparent;
+    box-shadow: none;
+}
 
-    .app-header {
-    margin-bottom: 25px;
+.app-header {
+    margin-bottom: 22px;
+    padding-top: 10px;
 }
 
 .app-header h1 {
     margin: 0;
-    font-size: 38px;
+    font-size: 54px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -2px;
+    color: #111;
+}
+
+.app-header h1::after {
+    content: "PR";
+    color: #0d6efd;
 }
 
 .app-header p {
     margin: 6px 0 0;
-    color: #666;
-    font-size: 15px;
+    color: #111;
+    font-size: 20px;
+    font-weight: 700;
+    font-style: italic;
 }
 
-    .precio {
-      font-size: 24px;
-      margin: 18px 0;
-    }
+.fuel-buttons {
+    display: flex;
+    gap: 12px;
+    margin: 18px 0 22px;
+}
+
+.fuel-button {
+    flex: 1;
+    min-height: 170px;
+    border: 4px solid #111;
+    border-radius: 26px 26px 16px 16px;
+    padding: 14px 8px 12px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    font-family: Arial, sans-serif;
+
+    box-shadow:
+        0 10px 0 #111,
+        0 14px 18px rgba(0, 0, 0, 0.20);
+
+    transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease;
+}
+.fuel-button:active {
+    transform: translateY(5px);
+
+    box-shadow:
+        0 5px 0 #111,
+        0 8px 12px rgba(0, 0, 0, 0.18);
+}
+
+
+.fuel-button small {
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.fuel-button strong {
+    font-size: 58px;
+    line-height: 1;
+    font-weight: 900;
+}
+
+.fuel-button em {
+    font-style: normal;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 6px;
+    margin-top: -2px;
+}
+
+.fuel-button span {
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.fuel-button.regular {
+    background: #ffd83d;
+    color: #111;
+}
+
+.fuel-button.premium {
+    background: #ef233c;
+    color: white;
+}
+
+.fuel-button.diesel {
+    background: #27c76f;
+    color: #111;
+}
 
     .fecha {
       margin-top: 25px;
@@ -48,30 +141,34 @@
       color: #666;
     }
 
-    .controles {
+.controles {
     display: flex;
-    gap: 10px;
-    margin: 15px 0 25px;
+    flex-direction: column;
+    gap: 14px;
+    margin: 18px 0 24px;
 }
 
 .controles select {
-    flex: 1;
-    padding: 12px;
-    font-size: 16px;
+    width: 100%;
+    padding: 16px;
+    font-size: 17px;
     border: 1px solid #ddd;
-    border-radius: 10px;
+    border-radius: 16px;
     background: white;
+    box-sizing: border-box;
 }
 
 #cercaDeMi {
-    padding: 12px 18px;
-    font-size: 16px;
-    font-weight: bold;
+    width: 100%;
+    padding: 17px;
+    font-size: 20px;
+    font-weight: 800;
     border: none;
-    border-radius: 10px;
-    background: #007aff;
+    border-radius: 18px;
+    background: #0d7cff;
     color: white;
     cursor: pointer;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
 }
 
 .boton-mapa {
@@ -131,6 +228,167 @@
     font-size: 12px;
     color: #666;
 }
+.fuel-popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 9999;
+}
+
+.fuel-popup.activo {
+    display: flex;
+}
+
+.fuel-popup-content {
+    width: 100%;
+    max-width: 340px;
+    background: white;
+    border-radius: 24px;
+    padding: 26px 22px 22px;
+    box-sizing: border-box;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    position: relative;
+}
+
+.cerrar-popup {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    border: none;
+    background: transparent;
+    font-size: 32px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.fuel-popup-content h2 {
+    margin: 4px 0 22px;
+    font-size: 28px;
+}
+
+.popup-precios {
+    display: flex;
+    gap: 12px;
+}
+
+.popup-precios > div {
+    flex: 1;
+    background: #f4f6f8;
+    border-radius: 16px;
+    padding: 16px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.popup-precios span {
+    font-size: 14px;
+    color: #666;
+}
+
+.popup-precios strong {
+    font-size: 28px;
+}
+
+.popup-precios small {
+    color: #666;
+}
+
+.fuel-popup-content p {
+    margin: 18px 0 0;
+    font-size: 13px;
+    color: #666;
+}
+.popup-regular {
+    border-top: 12px solid #ffd83d;
+}
+
+.popup-premium {
+    border-top: 12px solid #ef233c;
+}
+
+.popup-diesel {
+    border-top: 12px solid #27c76f;
+}
+
+.popup-regular #popupTitulo {
+    color: #111;
+}
+
+.popup-premium #popupTitulo {
+    color: #ef233c;
+}
+
+.popup-diesel #popupTitulo {
+    color: #159957;
+}
+.marca-fila {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 12px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.94);
+    margin-bottom: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.marca-nombre {
+    width: 85px;
+    text-align: left;
+    font-size: 18px;
+}
+
+.marca-precios {
+    flex: 1;
+    display: flex;
+    gap: 8px;
+}
+
+.precio-chip {
+    flex: 1;
+    border-radius: 10px;
+    padding: 8px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.precio-chip b {
+    font-size: 16px;
+}
+
+.precio-chip small {
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.regular-chip {
+    background: #ffd83d;
+    color: #111;
+}
+
+.premium-chip {
+    background: #ef233c;
+    color: white;
+}
+
+.diesel-chip {
+    background: #27c76f;
+    color: white;
+}
+
+.marca-flecha {
+    font-size: 34px;
+    font-weight: 300;
+    line-height: 1;
+}
   </style>
 </head>
 
@@ -138,17 +396,37 @@
 
   <div class="card">
     <div class="app-header">
-  <h1>GasPR</h1>
+  <h1>Gas</h1>
   <p>Encuentra gasolina cerca de ti</p>
 </div>
 
-    <div class="precio" id="regular">Regular: cargando...</div>
-    <div class="precio" id="premium">Premium: cargando...</div>
-    <div class="precio" id="diesel">Diesel: cargando...</div>
+<div class="fuel-buttons">
+<button class="fuel-button regular" id="regular">
+    <small>MINIMUM OCTANE RATING</small>
+    <strong>87</strong>
+    <em>PRESS</em>
+    <span>REGULAR</span>
+</button>
+
+    <button class="fuel-button premium" id="premium">
+        <small>MINIMUM OCTANE RATING</small>
+        <strong>91</strong>
+        <em>PRESS</em>
+        <span>PREMIUM</span>
+    </button>
+
+    <button class="fuel-button diesel" id="diesel">
+        <small>MINIMUM OCTANE RATING</small>
+        <strong>D</strong>
+        <em>PRESS</em>
+        <span>DIESEL</span>
+    </button>
+</div>
 
     <div class="fecha" id="fecha"></div>
     <div class="controles">
-  <select id="municipio">
+    <button id="cercaDeMi">Buscar cerca de mí</button>
+    <select id="municipio">
     <option value="" selected>Selecciona un municipio</option>
     <option value="ADJUNTAS">Adjuntas</option>
     <option value="AGUADA">Aguada</option>
@@ -230,7 +508,7 @@
     <option value="YAUCO">Yauco</option>
 </select>
 
-  <button id="cercaDeMi">Buscar cerca de mí</button>
+  
 </div>
 <h2>Gasolineras cerca de ti</h2>
 <p id="contadorGasolineras"></p>
@@ -240,18 +518,48 @@
   </div>
 
   <script>
+
  fetch("/api/precios")
       .then(respuesta => respuesta.json())
       .then(datos => {
 
-        document.getElementById("regular").textContent =
-          `Regular: ${datos.regular.minimo} - ${datos.regular.maximo} ¢/L`;
+const precioRegular = datos.regular;
+const precioPremium = datos.premium;
+const precioDiesel = datos.diesel;
+function abrirPopup(titulo, precios, tipo) {
+    document.getElementById("popupTitulo").textContent = titulo;
+    document.getElementById("popupMinimo").textContent = precios.minimo;
+    document.getElementById("popupMaximo").textContent = precios.maximo;
 
-        document.getElementById("premium").textContent =
-          `Premium: ${datos.premium.minimo} - ${datos.premium.maximo} ¢/L`;
+    const popup = document.querySelector(".fuel-popup-content");
 
-        document.getElementById("diesel").textContent =
-          `Diesel: ${datos.diesel.minimo} - ${datos.diesel.maximo} ¢/L`;
+    popup.classList.remove("popup-regular", "popup-premium", "popup-diesel");
+    popup.classList.add(`popup-${tipo}`);
+
+    document.getElementById("fuelPopup").classList.add("activo");
+}
+
+
+document.getElementById("regular").addEventListener("click", () => {
+    abrirPopup("Regular 87", precioRegular, "regular");
+});
+
+document.getElementById("premium").addEventListener("click", () => {
+    abrirPopup("Premium 91", precioPremium, "premium");
+});
+
+document.getElementById("diesel").addEventListener("click", () => {
+    abrirPopup("Diésel", precioDiesel, "diesel");
+});
+document.getElementById("cerrarPopup").addEventListener("click", () => {
+    document.getElementById("fuelPopup").classList.remove("activo");
+});
+
+document.getElementById("fuelPopup").addEventListener("click", (evento) => {
+    if (evento.target.id === "fuelPopup") {
+        document.getElementById("fuelPopup").classList.remove("activo");
+    }
+});
 
         document.getElementById("fecha").textContent =
           `Actualizado: ${new Date(datos.actualizado).toLocaleString()}`;
@@ -259,28 +567,29 @@
 
 contenedorMarcas.innerHTML = datos.marcas
   .map(marca => `
-   <div class="marca">
-  <strong>${marca.marca}</strong>
-
-  <div class="combustibles">
-    <div>
-      <span>Regular</span>
-      <b>${marca.regular}</b>
-      <small>¢/L</small>
+   <div class="marca marca-fila">
+    <div class="marca-nombre">
+        <strong>${marca.marca}</strong>
     </div>
 
-    <div>
-      <span>Premium</span>
-      <b>${marca.premium}</b>
-      <small>¢/L</small>
+    <div class="marca-precios">
+        <div class="precio-chip regular-chip">
+            <b>${marca.regular}</b>
+            <small>Regular</small>
+        </div>
+
+        <div class="precio-chip premium-chip">
+            <b>${marca.premium}</b>
+            <small>Premium</small>
+        </div>
+
+        <div class="precio-chip diesel-chip">
+            <b>${marca.diesel}</b>
+            <small>Diésel</small>
+        </div>
     </div>
 
-    <div>
-      <span>Diesel</span>
-      <b>${marca.diesel}</b>
-      <small>¢/L</small>
-    </div>
-  </div>
+    <div class="marca-flecha">›</div>
 </div>
   `)
   .join("");
@@ -379,6 +688,28 @@ error => {
 });
 
   </script>
+<div id="fuelPopup" class="fuel-popup">
+    <div class="fuel-popup-content">
+        <button id="cerrarPopup" class="cerrar-popup">×</button>
 
+        <h2 id="popupTitulo">Regular</h2>
+
+        <div class="popup-precios">
+            <div>
+                <span>Mínimo</span>
+                <strong id="popupMinimo">--</strong>
+                <small>¢/L</small>
+            </div>
+
+            <div>
+                <span>Máximo</span>
+                <strong id="popupMaximo">--</strong>
+                <small>¢/L</small>
+            </div>
+        </div>
+
+        <p>Precios oficiales de DACO</p>
+    </div>
+</div>
 </body>
 </html>
