@@ -339,9 +339,12 @@ body {
 }
 
 .marca-nombre {
-    width: 85px;
-    text-align: left;
-    font-size: 18px;
+    width: 120px;
+    min-width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .marca-precios {
@@ -604,7 +607,7 @@ contenedorMarcas.innerHTML = datos.marcas
     ${logosMarcas[marca.marca]
         ? `<img src="${logosMarcas[marca.marca]}" alt="${marca.marca}" class="marca-logo">`
         : ''}
-    <strong>${marca.marca}</strong>
+    
 </div>
 
     <div class="marca-precios">
