@@ -389,6 +389,21 @@ body {
     font-weight: 300;
     line-height: 1;
 }
+.marca-logo {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.marca-nombre {
+    width: 110px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-align: left;
+    font-size: 17px;
+}
   </style>
 </head>
 
@@ -565,12 +580,32 @@ document.getElementById("fuelPopup").addEventListener("click", (evento) => {
           `Actualizado: ${new Date(datos.actualizado).toLocaleString()}`;
           const contenedorMarcas = document.getElementById("marcas");
 
+ const logosMarcas = {
+    "76": "images/76.svg",
+    "American": "images/american.svg",
+    "Bita's": "images/bitas.svg",
+    "EcoMaxx": "images/ecomaxx.svg",
+    "Gulf": "images/gulf.svg",
+    "Mobil": "images/mobil.svg",
+    "Phillips 66": "images/phillips66.svg",
+    "Puma": "images/puma.svg",
+    "Shell": "images/shell.svg",
+    "Sunoco": "images/sunoco.svg",
+    "Texaco": "images/texaco.svg",
+    "T-Express": "images/texpress.svg",
+    "Total": "images/total.svg",
+    "Ultra Top Fuel": "images/ultratopfuel.svg"
+};
+
 contenedorMarcas.innerHTML = datos.marcas
   .map(marca => `
    <div class="marca marca-fila">
     <div class="marca-nombre">
-        <strong>${marca.marca}</strong>
-    </div>
+    ${logosMarcas[marca.marca]
+        ? `<img src="${logosMarcas[marca.marca]}" alt="${marca.marca}" class="marca-logo">`
+        : ''}
+    <strong>${marca.marca}</strong>
+</div>
 
     <div class="marca-precios">
         <div class="precio-chip regular-chip">
