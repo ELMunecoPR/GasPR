@@ -398,6 +398,67 @@ body {
     object-fit: contain;
     flex-shrink: 0;
 }
+.marca-nombre img[alt="EcoMaxx"] {
+    transform: scale(1.55);
+    transform-origin: center;
+    background: #111;
+    padding: 4px 6px;
+    border-radius: 10px;
+}
+.marca-nombre img[alt="Puma"] {
+    transform: scale(1.75);
+    transform-origin: center;
+}
+.marca-nombre img[alt="Sunoco"] {
+    transform: scale(1.65);
+    transform-origin: center;
+}
+.marca-nombre img[alt="Mobil"] {
+    transform: scale(1.35);
+    transform-origin: center;
+}
+.marca-nombre img[alt="Total"] {
+    transform: scale(1.35);
+    transform-origin: center;
+}
+.marca-nombre img[alt="Phillips 66"] {
+    transform: scale(1.35);
+    transform-origin: center;
+}
+.marca-nombre img[alt="Texaco"] {
+    transform: scale(1.75);
+    transform-origin: center;
+}
+.marca-nombre img[alt="Gulf"] {
+    transform: scale(1.45);
+    transform-origin: center;
+}
+.marca-nombre img[alt="Shell"] {
+    transform: scale(1.35);
+    transform-origin: center;
+}
+.marca-nombre img[alt="76"] {
+    transform: scale(1.35);
+    transform-origin: center;
+}
+.marca-nombre img[alt="Bita's"] {
+    transform: scale(1.35);
+    transform-origin: center;
+}
+.marca-nombre img[alt="American"] {
+    transform: scale(1.45);
+    transform-origin: center;
+    border-radius: 10px;
+}
+.marca-nombre img[alt="T-Express"] {
+    transform: scale(1.40);
+    transform-origin: center;
+}
+.marca-nombre img[alt="Ultra Top Fuel"] {
+    transform: scale(1.45);
+    transform-origin: center;
+    border-radius: 10px;
+}
 
 .marca-nombre {
     width: 110px;
@@ -602,7 +663,7 @@ document.getElementById("fuelPopup").addEventListener("click", (evento) => {
 
 contenedorMarcas.innerHTML = datos.marcas
   .map(marca => `
-   <div class="marca marca-fila">
+   <div class="marca marca-fila" data-marca="${marca.marca}">
     <div class="marca-nombre">
     ${logosMarcas[marca.marca]
         ? `<img src="${logosMarcas[marca.marca]}" alt="${marca.marca}" class="marca-logo">`
@@ -631,6 +692,109 @@ contenedorMarcas.innerHTML = datos.marcas
 </div>
   `)
   .join("");
+document.querySelectorAll(".marca-fila").forEach(tarjeta => {
+    tarjeta.addEventListener("click", () => {
+        const marcaSeleccionada = tarjeta.dataset.marca;
+
+        document.getElementById("marcaPopupTitulo").textContent =
+            `Estaciones ${marcaSeleccionada}`;
+
+        document.getElementById("marcaPopupContenido").textContent =
+            "Buscando estaciones cercanas...";
+
+        document.getElementById("marcaPopup").classList.add("activo");
+
+        navigator.geolocation.getCurrentPosition(async posicion => {
+            const latitud = posicion.coords.latitude;
+            const longitud = posicion.coords.longitude;
+
+            const respuesta = await fetch(
+                `/api/gasolineras-marca?marca=${encodeURIComponent(marcaSeleccionada)}&lat=${latitud}&lng=${longitud}`
+            );
+
+            const estaciones = await respuesta.json();
+            const aliasesMarca = {
+    "76": ["76"],
+    "American": ["american"],
+    "Bita's": ["bita"],
+    "EcoMaxx": ["ecomaxx", "eco maxx"],
+    "Gulf": ["gulf"],
+    "Mobil": ["mobil"],
+    "Phillips 66": ["phillips 66", "phillips"],
+    "Puma": ["puma"],
+    "Shell": ["shell"],
+    "Sunoco": ["sunoco"],
+    "Texaco": ["texaco"],
+    "T-Express": ["t-express", "texpress"],
+    "Total": ["total", "totalenergies"],
+    "Ultra Top Fuel": ["ultra top fuel"]
+};
+
+const nombresValidos =
+    aliasesMarca[marcaSeleccionada] || [marcaSeleccionada.toLowerCase()];
+
+const estacionesFiltradas = estaciones.filter(estacion => {
+    const nombre =
+        estacion.displayName?.text?.toLowerCase() || "";
+
+    return nombresValidos.some(alias =>
+        nombre.includes(alias.toLowerCase())
+    );
+});
+
+            const contenido = document.getElementById("marcaPopupContenido");
+
+if (estacionesFiltradas.length === 0) {
+    contenido.innerHTML = "<p>No encontramos estaciones cercanas.</p>";
+} else {
+    contenido.innerHTML = estacionesFiltradas
+        .slice(0, 10)
+        .map(estacion => {
+            const nombre =
+                estacion.displayName?.text || marcaSeleccionada;
+
+            const direccion =
+                estacion.formattedAddress || "";
+
+            const lat = estacion.location?.latitude;
+            const lng = estacion.location?.longitude;
+
+            const distancia = calcularDistancia(
+                latitud,
+                longitud,
+                lat,
+                lng
+            );
+
+            return `
+                <div class="estacion-marca">
+                    <strong>${nombre}</strong>
+                    <span>${distancia.toFixed(2)} millas</span>
+                    <small>${direccion}</small>
+
+                    <a
+                        href="https://www.google.com/maps/dir/?api=1&origin=${latitud},${longitud}&destination=${lat},${lng}&travelmode=driving"
+                        target="_blank"
+                    >
+                        Cómo llegar
+                    </a>
+                </div>
+            `;
+        })
+        .join("");
+}
+        });
+    });
+});
+document.getElementById("cerrarMarcaPopup").addEventListener("click", () => {
+    document.getElementById("marcaPopup").classList.remove("activo");
+});
+
+document.getElementById("marcaPopup").addEventListener("click", (evento) => {
+    if (evento.target.id === "marcaPopup") {
+        document.getElementById("marcaPopup").classList.remove("activo");
+    }
+});
       });
       let gasolinerasActuales = [];
      async function cargarGasolineras() {
@@ -747,6 +911,17 @@ error => {
         </div>
 
         <p>Precios oficiales de DACO</p>
+    </div>
+</div>
+<div id="marcaPopup" class="fuel-popup">
+    <div class="fuel-popup-content">
+        <button id="cerrarMarcaPopup" class="cerrar-popup">×</button>
+
+        <h2 id="marcaPopupTitulo">Estaciones</h2>
+
+        <div id="marcaPopupContenido">
+            Cargando...
+        </div>
     </div>
 </div>
 </body>

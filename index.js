@@ -9,7 +9,7 @@ const app = express();
 app.use(express.static(__dirname))
 const PORT = 3001;
 const URL_GASOLINERAS = "https://sigejp.pr.gov/server/rest/services/Public_Assets/public_assets_5142019/FeatureServer/0/query";
-async function obtenerGasolinerasGoogle(latitud, longitud, radio = 5000) {
+async function obtenerGasolinerasGoogle(latitud, longitud, radio = 5000) { 
   const respuesta = await fetch(
     "https://places.googleapis.com/v1/places:searchNearby",
     {
@@ -32,6 +32,44 @@ async function obtenerGasolinerasGoogle(latitud, longitud, radio = 5000) {
             radius: radio
           }
         }
+      })
+    }
+  );
+
+  const datos = await respuesta.json();
+
+  return datos.places || [];
+}
+async function obtenerGasolinerasPorMarcaGoogle(
+  marca,
+  latitud,
+  longitud,
+  radio = 10000
+) {
+  const respuesta = await fetch(
+    "https://places.googleapis.com/v1/places:searchText",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Goog-Api-Key": GOOGLE_MAPS_API_KEY,
+        "X-Goog-FieldMask":
+          "places.id,places.displayName,places.formattedAddress,places.location"
+      },
+      body: JSON.stringify({
+        textQuery: `${marca} gas station`,
+        includedType: "gas_station",
+        strictTypeFiltering: true,
+        locationBias: {
+          circle: {
+            center: {
+              latitude: latitud,
+              longitude: longitud
+            },
+            radius: radio
+          }
+        },
+        pageSize: 20
       })
     }
   );
@@ -158,6 +196,25 @@ app.get("/api/gasolineras", async (req, res) => {
   } catch (error) {
     res.status(500).json({
       error: "No se pudieron obtener las gasolineras"
+    });
+  }
+});
+app.get("/api/gasolineras-marca", async (req, res) => {
+  try {
+    const marca = req.query.marca;
+    const latitud = Number(req.query.lat);
+    const longitud = Number(req.query.lng);
+
+    const gasolineras = await obtenerGasolinerasPorMarcaGoogle(
+      marca,
+      latitud,
+      longitud
+    );
+
+    res.json(gasolineras);
+  } catch (error) {
+    res.status(500).json({
+      error: "No se pudieron obtener las gasolineras de esa marca"
     });
   }
 });
