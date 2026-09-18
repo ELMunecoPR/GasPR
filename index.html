@@ -201,6 +201,88 @@ body {
     margin-bottom: 10px;
 }
 
+.gasolinera-cercana {
+    padding: 12px 14px;
+    margin-bottom: 9px;
+    text-align: left;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid #e1e7ef;
+    border-radius: 14px;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.06);
+}
+
+#gasolineras {
+    max-height: min(440px, 55vh);
+    max-height: min(440px, 55dvh);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(95, 103, 114, 0.35) transparent;
+    padding-right: 4px;
+}
+
+#gasolineras::-webkit-scrollbar {
+    width: 6px;
+}
+
+#gasolineras::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#gasolineras::-webkit-scrollbar-thumb {
+    background: rgba(95, 103, 114, 0.35);
+    border-radius: 999px;
+}
+
+#gasolineras::-webkit-scrollbar-thumb:hover {
+    background: rgba(95, 103, 114, 0.55);
+}
+
+.gasolinera-cercana.mas-cercana {
+    border: 2px solid #0d6efd;
+    background: #f4f8ff;
+}
+
+.gasolinera-cercana .etiqueta-cercana {
+    margin-bottom: 7px;
+    padding: 4px 9px;
+    font-size: 11px;
+}
+
+.gasolinera-nombre {
+    display: block;
+    font-size: 16px;
+    line-height: 1.25;
+    color: #111;
+}
+
+.gasolinera-distancia {
+    display: block;
+    margin-top: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #0d6efd;
+}
+
+.gasolinera-como-llegar {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 8px 11px;
+    color: white;
+    background: #0d6efd;
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.gasolinera-como-llegar:focus-visible {
+    outline: 3px solid rgba(13, 110, 253, 0.35);
+    outline-offset: 2px;
+}
+
 .marca {
     padding: 18px;
     margin-bottom: 14px;
@@ -328,145 +410,1696 @@ body {
     color: #159957;
 }
 .marca-fila {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 12px;
-    border-radius: 18px;
-    background: rgba(255,255,255,0.94);
-    margin-bottom: 12px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-}
-
-.marca-nombre {
-    width: 120px;
-    min-width: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-.marca-precios {
-    flex: 1;
-    display: flex;
-    gap: 8px;
-}
-
-.precio-chip {
-    flex: 1;
-    border-radius: 10px;
-    padding: 8px 4px;
+    width: 100%;
+    min-height: 96px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
-}
-
-.precio-chip b {
-    font-size: 16px;
-}
-
-.precio-chip small {
-    font-size: 10px;
-    font-weight: 700;
-}
-
-.regular-chip {
-    background: #ffd83d;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 10px 10px;
     color: #111;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #e1e7ef;
+    border-radius: 16px;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.premium-chip {
-    background: #ef233c;
-    color: white;
+.marca-fila:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.1);
 }
 
-.diesel-chip {
-    background: #27c76f;
-    color: white;
+.marca-fila:focus-visible {
+    outline: 3px solid rgba(13, 110, 253, 0.35);
+    outline-offset: 2px;
 }
 
-.marca-flecha {
-    font-size: 34px;
-    font-weight: 300;
-    line-height: 1;
+#marcas {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
 }
+
 .marca-logo {
-    width: 42px;
-    height: 42px;
+    width: 100%;
+    max-width: 118px;
+    height: 54px;
     object-fit: contain;
-    flex-shrink: 0;
-}
-.marca-nombre img[alt="EcoMaxx"] {
-    transform: scale(1.55);
-    transform-origin: center;
-    background: #111;
-    padding: 4px 6px;
-    border-radius: 10px;
-}
-.marca-nombre img[alt="Puma"] {
-    transform: scale(1.75);
-    transform-origin: center;
-}
-.marca-nombre img[alt="Sunoco"] {
-    transform: scale(1.65);
-    transform-origin: center;
-}
-.marca-nombre img[alt="Mobil"] {
-    transform: scale(1.35);
-    transform-origin: center;
-}
-.marca-nombre img[alt="Total"] {
-    transform: scale(1.35);
-    transform-origin: center;
-}
-.marca-nombre img[alt="Phillips 66"] {
-    transform: scale(1.35);
-    transform-origin: center;
-}
-.marca-nombre img[alt="Texaco"] {
-    transform: scale(1.75);
-    transform-origin: center;
-}
-.marca-nombre img[alt="Gulf"] {
-    transform: scale(1.45);
-    transform-origin: center;
-}
-.marca-nombre img[alt="Shell"] {
-    transform: scale(1.35);
-    transform-origin: center;
-}
-.marca-nombre img[alt="76"] {
-    transform: scale(1.35);
-    transform-origin: center;
-}
-.marca-nombre img[alt="Bita's"] {
-    transform: scale(1.35);
-    transform-origin: center;
-}
-.marca-nombre img[alt="American"] {
-    transform: scale(1.45);
-    transform-origin: center;
-    border-radius: 10px;
-}
-.marca-nombre img[alt="T-Express"] {
-    transform: scale(1.40);
-    transform-origin: center;
-}
-.marca-nombre img[alt="Ultra Top Fuel"] {
-    transform: scale(1.45);
-    transform-origin: center;
-    border-radius: 10px;
 }
 
-.marca-nombre {
-    width: 110px;
+.marca-accion {
+    font-size: 11px;
+    font-weight: 700;
+    color: #667085;
+}
+
+.price-sign {
+    --sign-background: #f8fafc;
+    --sign-accent: #243b53;
+    --sign-secondary: #0d6efd;
+    --sign-panel: white;
+    --sign-text: #111;
+    --sign-price: #0d6efd;
+    width: 100%;
+    max-width: 300px;
+    max-height: 86vh;
+    max-height: 86dvh;
+    padding: 20px 16px 16px;
+    overflow-y: auto;
+    color: var(--sign-text);
+    background: var(--sign-background);
+    border: 5px solid var(--sign-accent);
+    border-top: 12px solid var(--sign-secondary);
+    border-radius: 18px;
+    box-sizing: border-box;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+    position: relative;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+.price-sign--shell {
+    --sign-background: linear-gradient(180deg, #fff 0%, #fffdf5 100%);
+    --sign-accent: #dd1d21;
+    --sign-secondary: #ffd500;
+    --sign-panel: #faf7ee;
+    --sign-text: #24272a;
+    --sign-price: #ff3438;
+    border: 5px solid #d4d8da;
+    border-top: 12px solid #ffd500;
+    border-radius: 12px;
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.28),
+        inset 0 0 0 2px #fff;
+}
+
+.price-sign--shell .price-sign-header {
+    min-height: 126px;
+    padding: 8px 38px 12px;
+    background: #fff;
+    border-bottom: 5px solid #dd1d21;
+    box-shadow: 0 4px 0 #ffd500;
+}
+
+.price-sign--shell .price-sign-logo {
+    width: 108px;
+    height: 86px;
+    filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.16));
+}
+
+.price-sign--shell .price-sign-title {
+    color: #c81820;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+}
+
+.price-sign--shell .cerrar-popup {
+    color: #292d30;
+}
+
+.price-sign--shell .price-sign-prices {
+    gap: 6px;
+    margin-top: 13px;
+}
+
+.price-sign--shell .price-sign-prices::after {
+    content: "V-POWER";
+    padding: 7px 10px;
+    color: #fff;
+    background: linear-gradient(90deg, #c91820 0%, #ed2d32 70%, #ffd500 70%);
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: 0.12em;
+    text-align: left;
+}
+
+.price-sign--shell .price-sign-row {
+    min-height: 56px;
+    gap: 8px;
+    padding: 6px 7px 6px 11px;
+    background: #f5f3ec;
+    border: 1px solid #d8dcde;
+    border-left: 5px solid #dd1d21;
+    border-radius: 3px;
+}
+
+.price-sign--shell .price-sign-label {
+    color: #a71920;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.price-sign--shell .price-sign-row > span:last-child {
+    min-width: 120px;
+    padding: 7px 8px;
+    color: #ff3438;
+    text-align: right;
+    background: #201d1d;
+    border: 2px inset #716969;
+    box-sizing: border-box;
+}
+
+.price-sign--shell .price-sign-value {
+    color: #ff3438;
+    font-family: "Courier New", monospace;
+    font-size: 30px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px rgba(255, 52, 56, 0.58);
+}
+
+.price-sign--shell .price-sign-source {
+    color: #4b4f52;
+    opacity: 1;
+}
+
+.price-sign--shell .price-sign-stations {
+    color: #fff;
+    background: #d71920;
+    border: 0;
+    border-bottom: 4px solid #ffd500;
+    border-radius: 5px;
+}
+
+.price-sign--sunoco {
+    --sign-background: linear-gradient(180deg, #f8f9fa 0%, #e2e6e8 100%);
+    --sign-accent: #073f9f;
+    --sign-secondary: #ffd21a;
+    --sign-panel: #b51635;
+    --sign-text: #17243a;
+    --sign-price: #ff573d;
+    border: 6px solid #b7c0c4;
+    border-top-color: #e5e9ea;
+    border-radius: 7px;
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.31),
+        inset 0 0 0 2px #fff;
+}
+
+.price-sign--sunoco .price-sign-header {
+    min-height: 132px;
+    padding: 10px 14px 0;
+    background: #073f9f;
+    border: 2px solid #d8dfe2;
+}
+
+.price-sign--sunoco .price-sign-header::after {
+    content: "";
+    width: calc(100% + 28px);
+    height: 12px;
+    margin-top: 8px;
+    background: linear-gradient(90deg, #ffd21a 0 72%, #d51f32 72% 100%);
+    border-top: 3px solid #fff;
+    box-sizing: border-box;
+}
+
+.price-sign--sunoco .price-sign-logo {
+    max-width: 190px;
+    height: 72px;
+    filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.28));
+}
+
+.price-sign--sunoco .price-sign-title {
+    color: #ffd21a;
+    font-size: 13px;
+    font-style: italic;
+    letter-spacing: 0.15em;
+}
+
+.price-sign--sunoco .cerrar-popup {
+    color: #fff;
+}
+
+.price-sign--sunoco .price-sign-prices {
+    gap: 0;
+    margin-top: 8px;
+    border: 3px solid #aeb8bd;
+}
+
+.price-sign--sunoco .price-sign-row {
+    min-height: 58px;
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #151b20;
+    border: 0;
+    border-bottom: 3px solid #d5dcdf;
+    border-radius: 0;
+}
+
+.price-sign--sunoco .price-sign-row:last-child {
+    border-bottom: 0;
+}
+
+.price-sign--sunoco .price-sign-label {
+    width: 96px;
+    align-self: stretch;
     display: flex;
     align-items: center;
+    padding: 9px 10px;
+    color: #fff;
+    background: #b51635;
+    box-sizing: border-box;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.price-sign--sunoco .price-sign-row:last-child .price-sign-label {
+    color: #ffd21a;
+}
+
+.price-sign--sunoco .price-sign-row > span:last-child {
+    flex: 1;
+    padding: 7px 10px;
+    color: #ff573d;
+    text-align: right;
+}
+
+.price-sign--sunoco .price-sign-value {
+    color: #ff573d;
+    font-family: "Courier New", monospace;
+    font-size: 30px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px rgba(255, 87, 61, 0.58);
+}
+
+.price-sign--sunoco .price-sign-row:last-child > span:last-child,
+.price-sign--sunoco .price-sign-row:last-child .price-sign-value {
+    color: #48e685;
+    text-shadow: 0 0 8px rgba(72, 230, 133, 0.5);
+}
+
+.price-sign--sunoco .price-sign-source {
+    color: #34424c;
+    opacity: 1;
+}
+
+.price-sign--sunoco .price-sign-stations {
+    color: #fff;
+    background: #073f9f;
+    border: 0;
+    border-bottom: 4px solid #ffd21a;
+    border-radius: 4px;
+}
+
+.price-sign--texaco {
+    --sign-background: linear-gradient(180deg, #fafafa 0%, #e3e5e6 100%);
+    --sign-accent: #d71920;
+    --sign-secondary: #202224;
+    --sign-panel: #242627;
+    --sign-text: #202224;
+    --sign-price: #ff3d42;
+    border: 6px solid #8f9699;
+    border-top-color: #d8dcde;
+    border-radius: 7px;
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.34),
+        inset 0 0 0 2px #fff;
+}
+
+.price-sign--texaco .price-sign-header {
+    min-height: 132px;
+    padding: 8px 38px 12px;
+    background: #fff;
+    border: 2px solid #b6bdc0;
+    border-bottom: 10px solid #d71920;
+}
+
+.price-sign--texaco .price-sign-logo {
+    width: 112px;
+    height: 94px;
+    filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.2));
+}
+
+.price-sign--texaco .price-sign-title {
+    color: #202224;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+}
+
+.price-sign--texaco .cerrar-popup {
+    color: #202224;
+}
+
+.price-sign--texaco .price-sign-prices {
+    gap: 0;
+    margin-top: 8px;
+    border: 3px solid #8f9699;
+}
+
+.price-sign--texaco .price-sign-row {
+    min-height: 58px;
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #1d2021;
+    border: 0;
+    border-bottom: 3px solid #aeb5b8;
+    border-radius: 0;
+}
+
+.price-sign--texaco .price-sign-row:last-child {
+    border-bottom: 0;
+}
+
+.price-sign--texaco .price-sign-label {
+    width: 96px;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    padding: 9px 10px;
+    color: #fff;
+    background: #d71920;
+    box-sizing: border-box;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.price-sign--texaco .price-sign-row:last-child .price-sign-label {
+    background: #08744c;
+}
+
+.price-sign--texaco .price-sign-row > span:last-child {
+    flex: 1;
+    padding: 7px 10px;
+    color: #ff3d42;
+    text-align: right;
+}
+
+.price-sign--texaco .price-sign-value {
+    color: #ff3d42;
+    font-family: "Courier New", monospace;
+    font-size: 30px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px rgba(255, 61, 66, 0.6);
+}
+
+.price-sign--texaco .price-sign-row:last-child > span:last-child,
+.price-sign--texaco .price-sign-row:last-child .price-sign-value {
+    color: #54eb93;
+    text-shadow: 0 0 8px rgba(84, 235, 147, 0.5);
+}
+
+.price-sign--texaco .price-sign-source {
+    color: #34393c;
+    opacity: 1;
+}
+
+.price-sign--texaco .price-sign-stations {
+    color: #fff;
+    background: #d71920;
+    border: 2px solid #292c2e;
+    border-radius: 4px;
+}
+
+.price-sign--texpress {
+    --sign-background: linear-gradient(180deg, #414044 0%, #292a2e 100%);
+    --sign-accent: #f28a00;
+    --sign-secondary: #202126;
+    --sign-panel: #292b30;
+    --sign-text: #f4f5f6;
+    --sign-price: #55c9f2;
+    border: 5px solid #1c1d21;
+    border-right: 12px solid #f28a00;
+    border-top-color: #55565b;
+    border-radius: 14px 7px 14px 14px;
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.36),
+        inset 0 0 0 2px rgba(255, 255, 255, 0.08);
+}
+
+.price-sign--texpress .price-sign-header {
+    min-height: 132px;
+    padding: 10px 14px 0;
+    background: #3c3a3e;
+    border: 2px solid #1e1f23;
+}
+
+.price-sign--texpress .price-sign-header::after {
+    content: "EXPRESS";
+    width: calc(100% + 28px);
+    margin-top: 8px;
+    padding: 8px 4px;
+    color: #fff;
+    background: #f28a00;
+    border-top: 3px solid #222329;
+    box-sizing: border-box;
+    font-size: 13px;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: 0.14em;
+    text-align: center;
+}
+
+.price-sign--texpress .price-sign-logo {
+    max-width: 178px;
+    height: 68px;
+    filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.3));
+}
+
+.price-sign--texpress .price-sign-title {
+    color: #fff;
+    font-size: 13px;
+    letter-spacing: 0.13em;
+}
+
+.price-sign--texpress .cerrar-popup {
+    color: #fff;
+}
+
+.price-sign--texpress .price-sign-prices {
+    gap: 0;
+    margin-top: 8px;
+    border: 2px solid #16171a;
+}
+
+.price-sign--texpress .price-sign-row {
+    min-height: 59px;
     gap: 8px;
-    text-align: left;
-    font-size: 17px;
+    padding: 7px 8px 7px 12px;
+    background: #303238;
+    border: 0;
+    border-bottom: 2px solid #15161a;
+    border-left: 4px solid #f28a00;
+    border-radius: 0;
+}
+
+.price-sign--texpress .price-sign-row:last-child {
+    border-bottom: 0;
+}
+
+.price-sign--texpress .price-sign-label {
+    color: #eef0f2;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.price-sign--texpress .price-sign-row > span:last-child {
+    min-width: 120px;
+    padding: 7px 8px;
+    color: #55c9f2;
+    text-align: right;
+    background: #151a20;
+    border: 2px inset #59616a;
+    box-sizing: border-box;
+}
+
+.price-sign--texpress .price-sign-value {
+    color: #55c9f2;
+    font-family: "Courier New", monospace;
+    font-size: 30px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px rgba(85, 201, 242, 0.62);
+}
+
+.price-sign--texpress .price-sign-source {
+    color: #e2e5e7;
+    opacity: 0.9;
+}
+
+.price-sign--texpress .price-sign-stations {
+    color: #17181c;
+    background: #f28a00;
+    border: 2px solid #17181c;
+    border-radius: 4px;
+}
+
+.price-sign--total {
+    --sign-background: linear-gradient(180deg, #ef3340 0%, #c7192c 100%);
+    --sign-accent: #d71935;
+    --sign-secondary: #fff;
+    --sign-panel: #101b45;
+    --sign-text: #fff;
+    --sign-price: #f4f8ff;
+    border: 6px solid #c8ced1;
+    border-top-color: #fff;
+    border-radius: 9px;
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.33),
+        inset 0 0 0 2px rgba(255, 255, 255, 0.28);
+}
+
+.price-sign--total .price-sign-header {
+    min-height: 136px;
+    padding: 8px 38px 12px;
+    background: #fff;
+    border: 2px solid #d5dade;
+    border-bottom: 10px solid #ef3340;
+}
+
+.price-sign--total .price-sign-logo {
+    width: 132px;
+    height: 96px;
+    filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.18));
+}
+
+.price-sign--total .price-sign-title {
+    color: #d71935;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+}
+
+.price-sign--total .cerrar-popup {
+    color: #1d2850;
+}
+
+.price-sign--total .price-sign-prices {
+    gap: 6px;
+    margin-top: 9px;
+}
+
+.price-sign--total .price-sign-row {
+    min-height: 58px;
+    gap: 8px;
+    padding: 7px 8px 7px 12px;
+    background: #dc2537;
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    border-left: 5px solid #fff;
+    border-radius: 3px;
+}
+
+.price-sign--total .price-sign-label {
+    color: #fff;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.price-sign--total .price-sign-row > span:last-child {
+    min-width: 120px;
+    padding: 7px 8px;
+    color: #f4f8ff;
+    text-align: right;
+    background: #101b45;
+    border: 2px inset #596486;
+    box-sizing: border-box;
+}
+
+.price-sign--total .price-sign-value {
+    color: #f4f8ff;
+    font-family: "Courier New", monospace;
+    font-size: 30px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px rgba(214, 231, 255, 0.5);
+}
+
+.price-sign--total .price-sign-source {
+    color: #fff;
+    opacity: 0.92;
+}
+
+.price-sign--total .price-sign-stations {
+    color: #fff;
+    background: #101b45;
+    border: 2px solid #fff;
+    border-radius: 4px;
+}
+
+.price-sign--ultratopfuel {
+    --sign-background: linear-gradient(180deg, #172334 0%, #0c131e 100%);
+    --sign-accent: #d51f34;
+    --sign-secondary: #f6bd22;
+    --sign-panel: #101923;
+    --sign-text: #fff;
+    --sign-price: #ff4765;
+    border: 7px solid #ba1d31;
+    border-top-color: #ec3048;
+    border-radius: 7px;
+    box-shadow:
+        0 18px 48px rgba(0, 0, 0, 0.4),
+        0 0 18px rgba(213, 31, 52, 0.2),
+        inset 0 0 0 2px #44121a;
+}
+
+.price-sign--ultratopfuel .price-sign-header {
+    min-height: 132px;
+    padding: 10px 14px 0;
+    background: #152234;
+    border: 2px solid #d51f34;
+}
+
+.price-sign--ultratopfuel .price-sign-header::after {
+    content: "TOP TIER";
+    width: calc(100% + 28px);
+    margin-top: 8px;
+    padding: 7px 4px;
+    color: #69d68b;
+    background: #0d1722;
+    border-top: 3px solid #f6bd22;
+    border-bottom: 3px solid #d51f34;
+    box-sizing: border-box;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    text-align: center;
+}
+
+.price-sign--ultratopfuel .price-sign-logo {
+    max-width: 190px;
+    height: 70px;
+    filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.45));
+}
+
+.price-sign--ultratopfuel .price-sign-title {
+    color: #f6bd22;
+    font-size: 13px;
+    font-style: italic;
+    letter-spacing: 0.12em;
+}
+
+.price-sign--ultratopfuel .cerrar-popup {
+    color: #fff;
+}
+
+.price-sign--ultratopfuel .price-sign-prices {
+    gap: 5px;
+    margin-top: 9px;
+}
+
+.price-sign--ultratopfuel .price-sign-row {
+    min-height: 59px;
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #0c141d;
+    border: 2px solid #8f1929;
+    border-radius: 2px;
+}
+
+.price-sign--ultratopfuel .price-sign-label {
+    width: 98px;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    padding: 9px 10px;
+    color: #17202a;
+    background: #f6bd22;
+    box-sizing: border-box;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.price-sign--ultratopfuel .price-sign-row > span:last-child {
+    flex: 1;
+    padding: 7px 10px;
+    color: #ff4765;
+    text-align: right;
+    background: #090f16;
+}
+
+.price-sign--ultratopfuel .price-sign-value {
+    color: #ff4765;
+    font-family: "Courier New", monospace;
+    font-size: 30px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 9px rgba(255, 71, 101, 0.68);
+}
+
+.price-sign--ultratopfuel .price-sign-row:last-child > span:last-child,
+.price-sign--ultratopfuel .price-sign-row:last-child .price-sign-value {
+    color: #51e78d;
+    text-shadow: 0 0 9px rgba(81, 231, 141, 0.58);
+}
+
+.price-sign--ultratopfuel .price-sign-source {
+    color: #f4f6f8;
+    opacity: 0.9;
+}
+
+.price-sign--ultratopfuel .price-sign-stations {
+    color: #17202a;
+    background: #f6bd22;
+    border: 2px solid #d51f34;
+    border-radius: 4px;
+}
+
+.price-sign--american {
+    --sign-background: linear-gradient(180deg, #123f79 0%, #0b294f 100%);
+    --sign-accent: #cf2634;
+    --sign-secondary: #f58220;
+    --sign-panel: #173b6b;
+    --sign-text: #fff;
+    --sign-price: #eef6ff;
+    border: 6px solid #b9c3c9;
+    border-top-color: #edf2f4;
+    border-radius: 8px;
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.33),
+        inset 0 0 0 2px rgba(255, 255, 255, 0.24);
+}
+
+.price-sign--american .price-sign-header {
+    min-height: 132px;
+    padding: 10px 14px 0;
+    background: linear-gradient(180deg, #fff 0%, #eaf3fb 100%);
+    border: 2px solid #aebbc3;
+}
+
+.price-sign--american .price-sign-header::after {
+    content: "";
+    width: calc(100% + 28px);
+    height: 12px;
+    margin-top: 8px;
+    background: linear-gradient(90deg, #cf2634 0 45%, #fff 45% 55%, #174b88 55% 88%, #f58220 88% 100%);
+    border-top: 2px solid #9aa7af;
+    box-sizing: border-box;
+}
+
+.price-sign--american .price-sign-logo {
+    max-width: 184px;
+    height: 72px;
+    filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.2));
+}
+
+.price-sign--american .price-sign-title {
+    color: #123f79;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 0.13em;
+}
+
+.price-sign--american .cerrar-popup {
+    color: #173451;
+}
+
+.price-sign--american .price-sign-prices {
+    gap: 5px;
+    margin-top: 9px;
+}
+
+.price-sign--american .price-sign-row {
+    min-height: 58px;
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #111b27;
+    border: 2px solid #d3dce1;
+    border-radius: 3px;
+}
+
+.price-sign--american .price-sign-label {
+    width: 98px;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    padding: 9px 10px;
+    color: #fff;
+    background: #bd2532;
+    box-sizing: border-box;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.price-sign--american .price-sign-row:nth-child(2) .price-sign-label {
+    background: #174b88;
+}
+
+.price-sign--american .price-sign-row:nth-child(3) .price-sign-label {
+    background: #19734f;
+}
+
+.price-sign--american .price-sign-row > span:last-child {
+    flex: 1;
+    padding: 7px 10px;
+    color: #eef6ff;
+    text-align: right;
+}
+
+.price-sign--american .price-sign-value {
+    color: #eef6ff;
+    font-family: "Courier New", monospace;
+    font-size: 30px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px rgba(203, 228, 255, 0.5);
+}
+
+.price-sign--american .price-sign-row:nth-child(3) .price-sign-value {
+    color: #62e7a2;
+    text-shadow: 0 0 8px rgba(98, 231, 162, 0.5);
+}
+
+.price-sign--american .price-sign-source {
+    color: #fff;
+    opacity: 0.9;
+}
+
+.price-sign--american .price-sign-stations {
+    color: #fff;
+    background: #c52533;
+    border: 2px solid #fff;
+    border-bottom-color: #f58220;
+    border-radius: 4px;
+}
+
+.price-sign--bitas {
+    --sign-background: linear-gradient(180deg, #f8f9ff 0%, #e8eaf5 100%);
+    --sign-accent: #2b2a64;
+    --sign-secondary: #df5832;
+    --sign-panel: #2b2a64;
+    --sign-text: #252449;
+    --sign-price: #ff7655;
+    border: 6px solid #aeb6c0;
+    border-top-color: #e2e5ea;
+    border-radius: 8px;
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.3),
+        inset 0 0 0 2px #fff;
+}
+
+.price-sign--bitas .price-sign-header {
+    min-height: 132px;
+    padding: 10px 14px 0;
+    background: #fff;
+    border: 2px solid #b9bec9;
+}
+
+.price-sign--bitas .price-sign-header::after {
+    content: "";
+    width: calc(100% + 28px);
+    height: 12px;
+    margin-top: 8px;
+    background: linear-gradient(90deg, #2b2a64 0 72%, #df5832 72% 100%);
+    border-top: 2px solid #d5d9e0;
+    box-sizing: border-box;
+}
+
+.price-sign--bitas .price-sign-logo {
+    max-width: 184px;
+    height: 72px;
+    filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.18));
+}
+
+.price-sign--bitas .price-sign-title {
+    color: #2b2a64;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 0.13em;
+}
+
+.price-sign--bitas .cerrar-popup {
+    color: #2b2a64;
+}
+
+.price-sign--bitas .price-sign-prices {
+    gap: 5px;
+    margin-top: 9px;
+}
+
+.price-sign--bitas .price-sign-row {
+    min-height: 58px;
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #171724;
+    border: 2px solid #aeb4bf;
+    border-radius: 3px;
+}
+
+.price-sign--bitas .price-sign-label {
+    width: 98px;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    padding: 9px 10px;
+    color: #fff;
+    background: #2b2a64;
+    box-sizing: border-box;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.price-sign--bitas .price-sign-row > span:last-child {
+    flex: 1;
+    padding: 7px 10px;
+    color: #ff7655;
+    text-align: right;
+}
+
+.price-sign--bitas .price-sign-value {
+    color: #ff7655;
+    font-family: "Courier New", monospace;
+    font-size: 30px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px rgba(223, 88, 50, 0.62);
+}
+
+.price-sign--bitas .price-sign-row:nth-child(3) .price-sign-value {
+    color: #57df91;
+    text-shadow: 0 0 8px rgba(87, 223, 145, 0.52);
+}
+
+.price-sign--bitas .price-sign-source {
+    color: #34335f;
+    opacity: 1;
+}
+
+.price-sign--bitas .price-sign-stations {
+    color: #fff;
+    background: #2b2a64;
+    border: 0;
+    border-bottom: 4px solid #df5832;
+    border-radius: 4px;
+}
+
+.price-sign--mobil {
+    --sign-background: linear-gradient(180deg, #f7f8f8 0%, #e0e4e6 100%);
+    --sign-accent: #0b4b8f;
+    --sign-secondary: #d71920;
+    --sign-panel: #171d22;
+    --sign-text: #17212a;
+    --sign-price: #eef3f6;
+    border: 6px solid #b8c0c4;
+    border-top-color: #e2e6e8;
+    border-radius: 7px;
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.3),
+        inset 0 0 0 2px #f8f9f9;
+}
+
+.price-sign--mobil .price-sign-header {
+    min-height: 126px;
+    padding: 10px 12px 0;
+    background: linear-gradient(180deg, #fff 0%, #f0f2f3 100%);
+    border: 2px solid #aeb6ba;
+}
+
+.price-sign--mobil .price-sign-header::after {
+    content: "SYNERGY";
+    width: calc(100% + 24px);
+    margin-top: 8px;
+    padding: 8px 4px;
+    color: #fff;
+    background: #c91f2c;
+    box-sizing: border-box;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-align: center;
+}
+
+.price-sign--mobil .price-sign-logo {
+    max-width: 172px;
+    height: 58px;
+}
+
+.price-sign--mobil .price-sign-title {
+    color: #0b4b8f;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+}
+
+.price-sign--mobil .cerrar-popup {
+    color: #25333d;
+}
+
+.price-sign--mobil .price-sign-prices {
+    gap: 5px;
+    margin-top: 9px;
+}
+
+.price-sign--puma {
+    --sign-background: linear-gradient(180deg, #07533f 0%, #032f27 100%);
+    --sign-accent: #e32219;
+    --sign-secondary: #fff;
+    --sign-panel: #102c25;
+    --sign-text: #fff;
+    --sign-price: #ff4b4b;
+    border: 6px solid #d8dede;
+    border-top-color: #fff;
+    border-radius: 6px;
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.34),
+        inset 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+.price-sign--puma .price-sign-header {
+    min-height: 126px;
+    padding: 10px 14px 0;
+    background: linear-gradient(180deg, #d9252b 0 62%, #087049 62% 100%);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.price-sign--puma .price-sign-header::after {
+    content: "";
+    width: calc(100% + 28px);
+    height: 10px;
+    margin-top: 8px;
+    background: #087049;
+    border-top: 3px solid #fff;
+    box-sizing: border-box;
+}
+
+.price-sign--puma .price-sign-logo {
+    max-width: 190px;
+    height: 66px;
+    filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.25));
+}
+
+.price-sign--puma .price-sign-title {
+    color: #fff;
+    font-size: 13px;
+    font-style: italic;
+    letter-spacing: 0.16em;
+}
+
+.price-sign--puma .price-sign-prices {
+    gap: 0;
+    margin-top: 8px;
+    border: 3px solid rgba(255, 255, 255, 0.72);
+}
+
+.price-sign--76 {
+    --sign-background: linear-gradient(180deg, #f2f4f5 0%, #cfd4d7 100%);
+    --sign-accent: #f36c21;
+    --sign-secondary: #aeb5b9;
+    --sign-panel: #dfe3e5;
+    --sign-text: #17202a;
+    --sign-price: #ff3232;
+    border: 6px solid #aeb5b9;
+    border-top-color: #dce0e2;
+    border-radius: 8px;
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.3),
+        inset 0 0 0 2px #f8f9f9;
+}
+
+.price-sign--76 .price-sign-header {
+    min-height: 136px;
+    padding: 4px 38px 12px;
+    background: linear-gradient(180deg, #f7f8f8 0%, #d8dcde 100%);
+    border-bottom: 12px solid #f36c21;
+}
+
+.price-sign--76 .price-sign-logo {
+    width: 104px;
+    height: 104px;
+    filter: drop-shadow(0 5px 3px rgba(0, 0, 0, 0.24));
+}
+
+.price-sign--76 .price-sign-title {
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: #39434a;
+}
+
+.price-sign--76 .price-sign-prices {
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.price-sign--76 .price-sign-row {
+    min-height: 54px;
+    padding: 5px 6px 5px 10px;
+    background: #d9dddf;
+    border: 1px solid #9ca5aa;
+    border-left: 6px solid #f36c21;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.price-sign--76 .price-sign-row:nth-child(3) {
+    border-left-color: #17864b;
+}
+
+.price-sign--76 .price-sign-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #313a40;
+}
+
+.price-sign--76 .price-sign-row > span:last-child {
+    min-width: 120px;
+    padding: 7px 8px;
+    color: #ff3232;
+    text-align: right;
+    background: #171b1d;
+    border: 2px inset #667076;
+    box-sizing: border-box;
+}
+
+.price-sign--76 .price-sign-value {
+    color: #ff3232;
+    font-family: "Courier New", monospace;
+    font-size: 30px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 7px rgba(255, 50, 50, 0.58);
+}
+
+.price-sign--76 .price-sign-row:nth-child(3) > span:last-child,
+.price-sign--76 .price-sign-row:nth-child(3) .price-sign-value {
+    color: #26e66f;
+    text-shadow: 0 0 7px rgba(38, 230, 111, 0.55);
+}
+
+.price-sign--76 .price-sign-source {
+    color: #39434a;
+    opacity: 1;
+}
+
+.price-sign--76 .price-sign-stations {
+    background: #f36c21;
+    border-radius: 4px;
+}
+
+.price-sign--ecomaxx {
+    --sign-background: linear-gradient(180deg, #087c79 0%, #005b5d 100%);
+    --sign-accent: #b9c1c4;
+    --sign-secondary: #d8dddf;
+    --sign-panel: #087a78;
+    --sign-text: #f4f7f7;
+    --sign-price: #eef4f5;
+    border: 6px solid #9ca6aa;
+    border-top-color: #d8dddf;
+    border-radius: 6px;
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.32),
+        inset 0 0 0 2px rgba(236, 240, 241, 0.45);
+}
+
+.price-sign--ecomaxx .price-sign-header {
+    min-height: 118px;
+    padding: 10px 12px 0;
+    background: linear-gradient(180deg, #f4f6f6 0%, #c9d0d2 100%);
+    border: 2px solid #7f8a8e;
+}
+
+.price-sign--ecomaxx .price-sign-header::after {
+    content: "CANCEL SS";
+    width: calc(100% + 24px);
+    margin-top: 8px;
+    padding: 8px 4px;
+    color: #e8eeee;
+    background: #087a78;
+    border-top: 4px solid #9ca6aa;
+    box-sizing: border-box;
+    font-size: 14px;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: 0.12em;
+    text-align: center;
+}
+
+.price-sign--ecomaxx .price-sign-logo {
+    max-width: 178px;
+    height: 54px;
+}
+
+.price-sign--ecomaxx .price-sign-title {
+    color: #075d6a;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+}
+
+.price-sign--ecomaxx .cerrar-popup {
+    color: #263238;
+}
+
+.price-sign--ecomaxx .price-sign-prices {
+    gap: 0;
+    margin-top: 8px;
+    border: 3px solid #9ca6aa;
+}
+
+.price-sign--ecomaxx .price-sign-row {
+    min-height: 58px;
+    padding: 7px 8px 7px 12px;
+    background: #087a78;
+    border: 0;
+    border-bottom: 4px solid #9ca6aa;
+    border-radius: 0;
+}
+
+.price-sign--ecomaxx .price-sign-row:last-child {
+    border-bottom: 0;
+}
+
+.price-sign--ecomaxx .price-sign-label {
+    color: #d8e5e5;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.price-sign--ecomaxx .price-sign-row > span:last-child {
+    min-width: 120px;
+    padding: 7px 8px;
+    color: #eef4f5;
+    text-align: right;
+    background: #172225;
+    border: 2px inset #687478;
+    box-sizing: border-box;
+}
+
+.price-sign--ecomaxx .price-sign-value {
+    color: #eef4f5;
+    font-family: "Courier New", monospace;
+    font-size: 29px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 7px rgba(238, 244, 245, 0.5);
+}
+
+.price-sign--ecomaxx .price-sign-source {
+    color: #e3eeee;
+    opacity: 1;
+}
+
+.price-sign--ecomaxx .price-sign-stations {
+    color: #fff;
+    background: #063f43;
+    border: 2px solid #aeb8bb;
+    border-radius: 3px;
+}
+
+.price-sign--gulf {
+    --sign-background: linear-gradient(180deg, #a92528 0%, #74171b 100%);
+    --sign-accent: #9f2225;
+    --sign-secondary: #d8dddf;
+    --sign-panel: #8f2023;
+    --sign-text: #fff;
+    --sign-price: #ffdad7;
+    border: 6px solid #b8bfc2;
+    border-top-color: #e4e7e8;
+    border-radius: 7px;
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.32),
+        inset 0 0 0 2px rgba(255, 255, 255, 0.28);
+}
+
+.price-sign--gulf .price-sign-header {
+    min-height: 130px;
+    padding: 10px 38px 12px;
+    background: linear-gradient(180deg, #fff 0%, #edf0f1 100%);
+    border: 2px solid #aeb6ba;
+    border-bottom: 5px solid #c4aa75;
+}
+
+.price-sign--gulf .price-sign-logo {
+    width: 118px;
+    height: 96px;
+    filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.2));
+}
+
+.price-sign--gulf .price-sign-title {
+    color: #164f83;
+    font-size: 13px;
+    letter-spacing: 0.15em;
+}
+
+.price-sign--gulf .cerrar-popup {
+    color: #29343a;
+}
+
+.price-sign--gulf .price-sign-prices {
+    gap: 0;
+    margin-top: 8px;
+    border: 3px solid #c1c7ca;
+}
+
+.price-sign--gulf .price-sign-row {
+    min-height: 58px;
+    padding: 7px 8px 7px 12px;
+    background: #982528;
+    border: 0;
+    border-bottom: 3px solid #c1c7ca;
+    border-radius: 0;
+}
+
+.price-sign--gulf .price-sign-row:last-child {
+    background: #147348;
+    border-bottom: 0;
+}
+
+.price-sign--gulf .price-sign-label {
+    color: #fff;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+.price-sign--gulf .price-sign-row > span:last-child {
+    min-width: 120px;
+    padding: 7px 8px;
+    color: #ffdad7;
+    text-align: right;
+    background: #21191a;
+    border: 2px inset #766a6b;
+    box-sizing: border-box;
+}
+
+.price-sign--gulf .price-sign-value {
+    color: #ffdad7;
+    font-family: "Courier New", monospace;
+    font-size: 29px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 7px rgba(255, 106, 96, 0.55);
+}
+
+.price-sign--gulf .price-sign-row:last-child > span:last-child,
+.price-sign--gulf .price-sign-row:last-child .price-sign-value {
+    color: #68f0a1;
+    text-shadow: 0 0 7px rgba(104, 240, 161, 0.5);
+}
+
+.price-sign--gulf .price-sign-source {
+    color: #fff;
+    opacity: 0.88;
+}
+
+.price-sign--gulf .price-sign-stations {
+    color: #fff;
+    background: #681419;
+    border: 2px solid #c8ced0;
+    border-radius: 4px;
+}
+
+.price-sign--phillips66 {
+    --sign-background: linear-gradient(180deg, #f7f8f8 0%, #d9dee0 100%);
+    --sign-accent: #b0202b;
+    --sign-secondary: #c5cbce;
+    --sign-panel: #9e2630;
+    --sign-text: #202a30;
+    --sign-price: #f3f6f7;
+    border: 6px solid #aeb7bb;
+    border-top-color: #e1e5e7;
+    border-radius: 7px;
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.32),
+        inset 0 0 0 2px #f8f9f9;
+}
+
+.price-sign--phillips66 .price-sign-header {
+    min-height: 142px;
+    padding: 8px 12px 0;
+    background: linear-gradient(180deg, #fff 0%, #edf0f1 100%);
+    border: 2px solid #aeb6ba;
+}
+
+.price-sign--phillips66 .price-sign-header::after {
+    content: "GASOLINA TOP TIER";
+    width: calc(100% + 24px);
+    margin-top: 8px;
+    padding: 8px 4px;
+    color: #fff;
+    background: #b0202b;
+    border-top: 3px solid #c8ced0;
+    box-sizing: border-box;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-align: center;
+}
+
+.price-sign--phillips66 .price-sign-logo {
+    width: 112px;
+    height: 88px;
+    filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.22));
+}
+
+.price-sign--phillips66 .price-sign-title {
+    color: #303a40;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+}
+
+.price-sign--phillips66 .cerrar-popup {
+    color: #273238;
+}
+
+.price-sign--phillips66 .price-sign-prices {
+    gap: 0;
+    margin-top: 8px;
+    border: 3px solid #aeb7bb;
+}
+
+.price-sign--phillips66 .price-sign-row {
+    min-height: 58px;
+    padding: 7px 8px 7px 12px;
+    background: #a32631;
+    border: 0;
+    border-bottom: 3px solid #b9c0c3;
+    border-radius: 0;
+}
+
+.price-sign--phillips66 .price-sign-row:last-child {
+    background: #08614f;
+    border-bottom: 0;
+}
+
+.price-sign--phillips66 .price-sign-label {
+    color: #fff;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.price-sign--phillips66 .price-sign-row > span:last-child {
+    min-width: 120px;
+    padding: 7px 8px;
+    color: #f3f6f7;
+    text-align: right;
+    background: #171c1f;
+    border: 2px inset #6d777c;
+    box-sizing: border-box;
+}
+
+.price-sign--phillips66 .price-sign-value {
+    color: #f3f6f7;
+    font-family: "Courier New", monospace;
+    font-size: 29px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 7px rgba(243, 246, 247, 0.48);
+}
+
+.price-sign--phillips66 .price-sign-row:last-child > span:last-child,
+.price-sign--phillips66 .price-sign-row:last-child .price-sign-value {
+    color: #79f0ba;
+    text-shadow: 0 0 7px rgba(121, 240, 186, 0.5);
+}
+
+.price-sign--phillips66 .price-sign-source {
+    color: #354149;
+    opacity: 1;
+}
+
+.price-sign--phillips66 .price-sign-stations {
+    color: #fff;
+    background: #9e202b;
+    border: 2px solid #b9c0c3;
+    border-radius: 4px;
+}
+
+.price-sign-header {
+    min-height: 72px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 4px 38px 14px;
+    border-bottom: 3px solid var(--sign-accent);
+}
+
+.price-sign-logo {
+    width: 100%;
+    max-width: 135px;
+    height: 58px;
+    object-fit: contain;
+}
+
+.price-sign-title {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.2;
+}
+
+.price-sign .cerrar-popup {
+    top: 7px;
+    right: 9px;
+    color: var(--sign-text);
+    font-size: 27px;
+}
+
+.price-sign-prices {
+    display: grid;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.price-sign-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--sign-panel);
+    border-left: 5px solid var(--sign-accent);
+    border-radius: 8px;
+}
+
+.price-sign--mobil .price-sign-row {
+    min-height: 58px;
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #171d22;
+    border: 2px solid #aeb7bc;
+    border-left: 0;
+    border-radius: 2px;
+    box-shadow: inset 0 0 0 1px #303940;
+}
+
+.price-sign--mobil .price-sign-label {
+    width: 94px;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    padding: 9px 10px;
+    color: #fff;
+    background: #0b4b8f;
+    box-sizing: border-box;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.price-sign--mobil .price-sign-row > span:last-child {
+    flex: 1;
+    padding: 7px 10px;
+    color: #eef3f6;
+    text-align: right;
+}
+
+.price-sign--mobil .price-sign-value {
+    color: #eef3f6;
+    font-family: "Courier New", monospace;
+    font-size: 30px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 7px rgba(238, 243, 246, 0.42);
+}
+
+.price-sign--mobil .price-sign-source {
+    color: #34434e;
+    opacity: 1;
+}
+
+.price-sign--mobil .price-sign-stations {
+    color: #fff;
+    background: #0b4b8f;
+    border: 0;
+    border-top: 4px solid #c91f2c;
+    border-radius: 3px;
+}
+
+.price-sign--puma .price-sign-row {
+    min-height: 58px;
+    padding: 7px 8px 7px 12px;
+    background: #0c4939;
+    border: 0;
+    border-bottom: 3px solid rgba(255, 255, 255, 0.72);
+    border-radius: 0;
+}
+
+.price-sign--puma .price-sign-row:last-child {
+    border-bottom: 0;
+}
+
+.price-sign--puma .price-sign-label {
+    color: #fff;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.price-sign--puma .price-sign-row > span:last-child {
+    min-width: 120px;
+    padding: 7px 8px;
+    color: #ff4b4b;
+    text-align: right;
+    background: #101b18;
+    border: 2px inset #607069;
+    box-sizing: border-box;
+}
+
+.price-sign-label {
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.price-sign-value {
+    color: var(--sign-price);
+    font-size: 27px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.price-sign--puma .price-sign-value {
+    color: #ff4b4b;
+    font-family: "Courier New", monospace;
+    font-size: 30px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px rgba(255, 75, 75, 0.62);
+}
+
+.price-sign--puma .price-sign-source {
+    color: #fff;
+    opacity: 0.88;
+}
+
+.price-sign--puma .price-sign-stations {
+    color: #fff;
+    background: #d9252b;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+}
+
+.price-sign-unit {
+    margin-left: 2px;
+    font-size: 11px;
+}
+
+.price-sign-source {
+    margin: 12px 0 0;
+    color: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    opacity: 0.75;
+}
+
+.price-sign-stations {
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px 12px;
+    color: #fff;
+    background: var(--sign-accent);
+    border: 0;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+@media (max-width: 340px) {
+    #marcas {
+        grid-template-columns: 1fr;
+    }
 }
 #marcaPopup .fuel-popup-content {
     max-width: 310px;
@@ -748,57 +2381,37 @@ document.getElementById("fuelPopup").addEventListener("click", (evento) => {
 
 contenedorMarcas.innerHTML = datos.marcas
   .map(marca => `
-   <div class="marca marca-fila" data-marca="${marca.marca}">
-    <div class="marca-nombre">
-    ${logosMarcas[marca.marca]
+   <button
+      type="button"
+      class="marca-fila"
+      data-marca="${marca.marca}"
+      aria-label="Ver precios de ${marca.marca}"
+   >
+      ${logosMarcas[marca.marca]
         ? `<img src="${logosMarcas[marca.marca]}" alt="${marca.marca}" class="marca-logo">`
-        : ''}
-    
-</div>
-
-    <div class="marca-precios">
-        <div class="precio-chip regular-chip">
-            <b>${marca.regular}</b>
-            <small>Regular</small>
-        </div>
-
-        <div class="precio-chip premium-chip">
-            <b>${marca.premium}</b>
-            <small>Premium</small>
-        </div>
-
-        <div class="precio-chip diesel-chip">
-            <b>${marca.diesel}</b>
-            <small>Diésel</small>
-        </div>
-    </div>
-
-    <div class="marca-flecha">›</div>
-</div>
+        : `<strong>${marca.marca}</strong>`}
+      <span class="marca-accion">Ver precios</span>
+   </button>
   `)
   .join("");
-document.querySelectorAll(".marca-fila").forEach(tarjeta => {
-    tarjeta.addEventListener("click", () => {
-        const marcaSeleccionada = tarjeta.dataset.marca;
+const temasMarca = {
+    "76": "76",
+    "American": "american",
+    "Bita's": "bitas",
+    "EcoMaxx": "ecomaxx",
+    "Gulf": "gulf",
+    "Phillips 66": "phillips66",
+    "Shell": "shell",
+    "Mobil": "mobil",
+    "Puma": "puma",
+    "Sunoco": "sunoco",
+    "Texaco": "texaco",
+    "T-Express": "texpress",
+    "Total": "total",
+    "Ultra Top Fuel": "ultratopfuel"
+};
 
-        document.getElementById("marcaPopupTitulo").textContent =
-            `Estaciones ${marcaSeleccionada}`;
-
-        document.getElementById("marcaPopupContenido").textContent =
-            "Buscando estaciones cercanas...";
-
-        document.getElementById("marcaPopup").classList.add("activo");
-
-        navigator.geolocation.getCurrentPosition(async posicion => {
-            const latitud = posicion.coords.latitude;
-            const longitud = posicion.coords.longitude;
-
-            const respuesta = await fetch(
-                `/api/gasolineras-marca?marca=${encodeURIComponent(marcaSeleccionada)}&lat=${latitud}&lng=${longitud}`
-            );
-
-            const estaciones = await respuesta.json();
-            const aliasesMarca = {
+const aliasesMarca = {
     "76": ["76"],
     "American": ["american"],
     "Bita's": ["bita"],
@@ -814,6 +2427,53 @@ document.querySelectorAll(".marca-fila").forEach(tarjeta => {
     "Total": ["total", "totalenergies"],
     "Ultra Top Fuel": ["ultra top fuel"]
 };
+
+let marcaActiva = null;
+
+function formatearPrecioMarca(precio) {
+    return Number.isFinite(precio) ? precio.toFixed(1) : "--";
+}
+
+function abrirLetreroPrecios(marca) {
+    marcaActiva = marca;
+
+    const tema = temasMarca[marca.marca] || "generic";
+    const letrero = document.getElementById("priceSign");
+    const logo = document.getElementById("priceSignLogo");
+
+    letrero.className = `price-sign price-sign--${tema}`;
+    logo.src = logosMarcas[marca.marca] || "";
+    logo.alt = marca.marca;
+    logo.hidden = !logosMarcas[marca.marca];
+    document.getElementById("priceSignTitle").textContent = marca.marca;
+    document.getElementById("priceRegular").textContent =
+        formatearPrecioMarca(marca.regular);
+    document.getElementById("pricePremium").textContent =
+        formatearPrecioMarca(marca.premium);
+    document.getElementById("priceDiesel").textContent =
+        formatearPrecioMarca(marca.diesel);
+
+    document.getElementById("precioMarcaPopup").classList.add("activo");
+}
+
+function abrirEstacionesMarca(marcaSeleccionada) {
+    document.getElementById("marcaPopupTitulo").textContent =
+        `Estaciones ${marcaSeleccionada}`;
+
+    document.getElementById("marcaPopupContenido").textContent =
+        "Buscando estaciones cercanas...";
+
+    document.getElementById("marcaPopup").classList.add("activo");
+
+    navigator.geolocation.getCurrentPosition(async posicion => {
+        const latitud = posicion.coords.latitude;
+        const longitud = posicion.coords.longitude;
+
+        const respuesta = await fetch(
+            `/api/gasolineras-marca?marca=${encodeURIComponent(marcaSeleccionada)}&lat=${latitud}&lng=${longitud}`
+        );
+
+        const estaciones = await respuesta.json();
 
 const nombresValidos =
     aliasesMarca[marcaSeleccionada] || [marcaSeleccionada.toLowerCase()];
@@ -870,9 +2530,40 @@ if (estacionesFiltradas.length === 0) {
         })
         .join("");
 }
-        });
+    });
+}
+
+document.querySelectorAll(".marca-fila").forEach(tarjeta => {
+    tarjeta.addEventListener("click", () => {
+        const marca = datos.marcas.find(
+            item => item.marca === tarjeta.dataset.marca
+        );
+
+        if (marca) {
+            abrirLetreroPrecios(marca);
+        }
     });
 });
+
+document.getElementById("cerrarPrecioMarcaPopup").addEventListener("click", () => {
+    document.getElementById("precioMarcaPopup").classList.remove("activo");
+});
+
+document.getElementById("precioMarcaPopup").addEventListener("click", evento => {
+    if (evento.target.id === "precioMarcaPopup") {
+        document.getElementById("precioMarcaPopup").classList.remove("activo");
+    }
+});
+
+document.getElementById("buscarEstacionesMarca").addEventListener("click", () => {
+    if (!marcaActiva) {
+        return;
+    }
+
+    document.getElementById("precioMarcaPopup").classList.remove("activo");
+    abrirEstacionesMarca(marcaActiva.marca);
+});
+
 document.getElementById("cerrarMarcaPopup").addEventListener("click", () => {
     document.getElementById("marcaPopup").classList.remove("activo");
 });
@@ -960,11 +2651,11 @@ gasolinerasActuales = gasolinerasActuales
   const contenedor = document.getElementById("gasolineras");
   contenedor.innerHTML = gasolinerasActuales
   .map((estacion, index) => `
-    <div class="marca ${index === 0 ? "mas-cercana" : ""}">
+    <div class="gasolinera-cercana ${index === 0 ? "mas-cercana" : ""}">
       ${index === 0 ? '<div class="etiqueta-cercana">Más cercana</div>' : ''}
-      <strong>${estacion.displayName.text}</strong><br>
-      ${estacion.distancia.toFixed(2)} millas<br>
-      <a href="https://www.google.com/maps/dir/?api=1&origin=${latitudUsuario}%2C${longitudUsuario}&destination=${estacion.location.latitude}%2C${estacion.location.longitude}&travelmode=driving" target="_blank">
+      <strong class="gasolinera-nombre">${estacion.displayName.text}</strong>
+      <span class="gasolinera-distancia">${estacion.distancia.toFixed(2)} millas</span>
+      <a class="gasolinera-como-llegar" href="https://www.google.com/maps/dir/?api=1&origin=${latitudUsuario}%2C${longitudUsuario}&destination=${estacion.location.latitude}%2C${estacion.location.longitude}&travelmode=driving" target="_blank">
         Cómo llegar
       </a>
     </div>
@@ -998,6 +2689,36 @@ error => {
         </div>
 
         <p>Precios oficiales de DACO</p>
+    </div>
+</div>
+<div id="precioMarcaPopup" class="fuel-popup" role="dialog" aria-modal="true" aria-label="Precios por marca según DACO">
+    <div id="priceSign" class="price-sign price-sign--generic">
+        <button id="cerrarPrecioMarcaPopup" class="cerrar-popup" aria-label="Cerrar">×</button>
+
+        <div class="price-sign-header">
+            <img id="priceSignLogo" class="price-sign-logo" src="" alt="">
+            <h2 id="priceSignTitle" class="price-sign-title">Marca</h2>
+        </div>
+
+        <div class="price-sign-prices">
+            <div class="price-sign-row">
+                <span class="price-sign-label">Regular</span>
+                <span><strong id="priceRegular" class="price-sign-value">--</strong><small class="price-sign-unit">¢/L</small></span>
+            </div>
+            <div class="price-sign-row">
+                <span class="price-sign-label">Premium</span>
+                <span><strong id="pricePremium" class="price-sign-value">--</strong><small class="price-sign-unit">¢/L</small></span>
+            </div>
+            <div class="price-sign-row">
+                <span class="price-sign-label">Diésel</span>
+                <span><strong id="priceDiesel" class="price-sign-value">--</strong><small class="price-sign-unit">¢/L</small></span>
+            </div>
+        </div>
+
+        <p class="price-sign-source">Precios por marca según DACO</p>
+        <button id="buscarEstacionesMarca" class="price-sign-stations" type="button">
+            Ver estaciones cercanas
+        </button>
     </div>
 </div>
 <div id="marcaPopup" class="fuel-popup">
