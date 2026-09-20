@@ -12,65 +12,96 @@ body {
     padding: 0;
     min-height: 100vh;
     text-align: center;
-    background:
-    radial-gradient(circle at 18% 22%, rgba(255,255,255,0.78) 0 4%, transparent 5%),
-    radial-gradient(circle at 24% 24%, rgba(255,255,255,0.72) 0 5%, transparent 6%),
-    radial-gradient(circle at 78% 18%, rgba(255,255,255,0.75) 0 4%, transparent 5%),
-    radial-gradient(circle at 84% 21%, rgba(255,255,255,0.68) 0 5%, transparent 6%),
-    linear-gradient(180deg, #8fd4ff 0%, #c7ebff 55%, #eaf8ff 100%);
-        
+    background-color: #dff3fd;
+    background-image:
+        linear-gradient(180deg, rgba(239, 250, 255, 0.14) 0%, rgba(239, 250, 255, 0.3) 100%),
+        url("images/gaspr_tropical_background.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center top;
+    background-attachment: fixed;
+    overflow-x: hidden;
 }
 
 .card {
     width: 100%;
-    max-width: 430px;
+    max-width: 460px;
     min-height: 100vh;
     margin: 0 auto;
-    padding: 28px 18px 50px;
+    padding: 24px 18px 48px;
     box-sizing: border-box;
     background: transparent;
     box-shadow: none;
+    font-family: Arial, sans-serif;
 }
 
 .app-header {
-    margin-bottom: 22px;
-    padding-top: 10px;
+    margin-bottom: 18px;
+    padding-top: 6px;
 }
 
 .app-header h1 {
     margin: 0;
-    font-size: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(46px, 13vw, 56px);
     font-weight: 900;
     line-height: 1;
-    letter-spacing: -2px;
+    letter-spacing: -2.5px;
     color: #111;
+    position: relative;
+    isolation: isolate;
+}
+
+.app-logo-icon {
+    width: 0.64em;
+    height: 0.64em;
+    margin-left: 10px;
+    color: #111;
+    flex-shrink: 0;
+    fill: currentColor;
+    order: 2;
+    transform: translateY(0.02em);
+    position: relative;
+    z-index: 1;
 }
 
 .app-header h1::after {
     content: "PR";
     color: #0d6efd;
+    order: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.app-header h1 > span {
+    order: 0;
+    position: relative;
+    z-index: 1;
 }
 
 .app-header p {
-    margin: 6px 0 0;
-    color: #111;
-    font-size: 20px;
-    font-weight: 700;
-    font-style: italic;
+    margin: 7px 0 0;
+    color: #263746;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
 }
 
 .fuel-buttons {
     display: flex;
-    gap: 12px;
-    margin: 18px 0 22px;
+    gap: 9px;
+    margin: 14px 0 20px;
 }
 
 .fuel-button {
     flex: 1;
-    min-height: 170px;
-    border: 4px solid #111;
-    border-radius: 26px 26px 16px 16px;
-    padding: 14px 8px 12px;
+    min-width: 0;
+    min-height: 152px;
+    border: 3px solid #111;
+    border-radius: 21px 21px 14px 14px;
+    padding: 12px 6px 10px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -79,44 +110,49 @@ body {
     font-family: Arial, sans-serif;
 
     box-shadow:
-        0 10px 0 #111,
-        0 14px 18px rgba(0, 0, 0, 0.20);
+        0 7px 0 #111,
+        0 11px 16px rgba(0, 0, 0, 0.18);
 
     transition:
         transform 0.12s ease,
         box-shadow 0.12s ease;
 }
 .fuel-button:active {
-    transform: translateY(5px);
+    transform: translateY(4px);
 
     box-shadow:
-        0 5px 0 #111,
-        0 8px 12px rgba(0, 0, 0, 0.18);
+        0 3px 0 #111,
+        0 6px 10px rgba(0, 0, 0, 0.16);
+}
+
+.fuel-button:focus-visible {
+    outline: 3px solid rgba(13, 110, 253, 0.4);
+    outline-offset: 3px;
 }
 
 
 .fuel-button small {
-    font-size: 9px;
+    font-size: 8px;
     font-weight: 800;
     line-height: 1.2;
 }
 
 .fuel-button strong {
-    font-size: 58px;
+    font-size: clamp(42px, 12vw, 54px);
     line-height: 1;
     font-weight: 900;
 }
 
 .fuel-button em {
     font-style: normal;
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 900;
-    letter-spacing: 6px;
+    letter-spacing: 4px;
     margin-top: -2px;
 }
 
 .fuel-button span {
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 900;
 }
 
@@ -135,55 +171,116 @@ body {
     color: #111;
 }
 
-    .fecha {
-      margin-top: 25px;
-      font-size: 14px;
-      color: #666;
-    }
+.fecha {
+    margin-top: 23px;
+    color: #526372;
+    font-size: 12px;
+    font-weight: 600;
+}
 
 .controles {
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    margin: 18px 0 24px;
+    gap: 11px;
+    margin: 16px 0 10px;
 }
 
 .controles select {
     width: 100%;
-    padding: 16px;
-    font-size: 17px;
-    border: 1px solid #ddd;
-    border-radius: 16px;
-    background: white;
+    min-height: 52px;
+    padding: 0 42px 0 15px;
+    color: #243442;
+    font-size: 15px;
+    font-weight: 600;
+    border: 1px solid #ccd8e2;
+    border-radius: 14px;
+    background-color: rgba(255, 255, 255, 0.96);
+    background-image:
+        linear-gradient(45deg, transparent 50%, #526372 50%),
+        linear-gradient(135deg, #526372 50%, transparent 50%);
+    background-position:
+        calc(100% - 19px) 22px,
+        calc(100% - 14px) 22px;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
     box-sizing: border-box;
+    box-shadow: 0 3px 10px rgba(35, 74, 105, 0.08);
+    appearance: none;
+}
+
+.controles select:focus-visible {
+    outline: 3px solid rgba(13, 110, 253, 0.25);
+    border-color: #0d6efd;
 }
 
 #cercaDeMi {
     width: 100%;
-    padding: 17px;
-    font-size: 20px;
+    min-height: 54px;
+    padding: 13px 18px;
+    font-size: 17px;
     font-weight: 800;
     border: none;
-    border-radius: 18px;
-    background: #0d7cff;
+    border-radius: 15px;
+    background: linear-gradient(180deg, #1685ff 0%, #0d6efd 100%);
     color: white;
     cursor: pointer;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 6px 14px rgba(13, 110, 253, 0.28);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+#cercaDeMi:hover {
+    box-shadow: 0 8px 18px rgba(13, 110, 253, 0.34);
+}
+
+#cercaDeMi:active {
+    transform: translateY(2px);
+    box-shadow: 0 3px 9px rgba(13, 110, 253, 0.25);
+}
+
+#cercaDeMi:focus-visible {
+    outline: 3px solid rgba(13, 110, 253, 0.3);
+    outline-offset: 3px;
 }
 
 .boton-mapa {
     display: inline-block;
-    margin-top: 10px;
-    padding: 9px 16px;
-    background: #f0f6ff;
-    color: #007aff;
+    min-height: 38px;
+    margin-top: 8px;
+    padding: 9px 13px;
+    color: #fff;
+    background: #0d6efd;
+    box-sizing: border-box;
     text-decoration: none;
-    font-weight: bold;
+    font-size: 12px;
+    font-weight: 700;
     border-radius: 9px;
 }
 
 #marcas {
-    margin-top: 20px;
+    margin-top: 12px;
+}
+
+.card > h2 {
+    margin: 30px 0 7px;
+    color: #172733;
+    font-size: 20px;
+    line-height: 1.25;
+    letter-spacing: -0.25px;
+}
+
+#contadorGasolineras {
+    margin: 0 0 8px;
+    color: #526372;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+#contadorGasolineras:empty {
+    display: none;
+}
+
+#gasolineras + h2 {
+    margin-top: 16px;
 }
 .marca.mas-cercana {
     border: 2px solid #007aff;
@@ -192,23 +289,23 @@ body {
 
 .etiqueta-cercana {
     display: inline-block;
-    background: #007aff;
+    margin-bottom: 7px;
+    padding: 4px 9px;
     color: white;
-    font-size: 13px;
-    font-weight: bold;
-    padding: 5px 10px;
+    background: #007aff;
     border-radius: 20px;
-    margin-bottom: 10px;
+    font-size: 11px;
+    font-weight: 700;
 }
 
 .gasolinera-cercana {
-    padding: 12px 14px;
-    margin-bottom: 9px;
+    margin-bottom: 8px;
+    padding: 11px 13px;
     text-align: left;
     background: rgba(255, 255, 255, 0.96);
     border: 1px solid #e1e7ef;
-    border-radius: 14px;
-    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.06);
+    border-radius: 13px;
+    box-shadow: 0 3px 10px rgba(35, 74, 105, 0.07);
 }
 
 #gasolineras {
@@ -243,6 +340,7 @@ body {
 .gasolinera-cercana.mas-cercana {
     border: 2px solid #0d6efd;
     background: #f4f8ff;
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.12);
 }
 
 .gasolinera-cercana .etiqueta-cercana {
@@ -253,26 +351,28 @@ body {
 
 .gasolinera-nombre {
     display: block;
-    font-size: 16px;
-    line-height: 1.25;
     color: #111;
+    font-size: 15px;
+    line-height: 1.25;
 }
 
 .gasolinera-distancia {
     display: block;
     margin-top: 4px;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     color: #0d6efd;
 }
 
 .gasolinera-como-llegar {
     display: inline-block;
-    margin-top: 8px;
-    padding: 8px 11px;
+    min-height: 38px;
+    margin-top: 7px;
+    padding: 9px 12px;
     color: white;
     background: #0d6efd;
     border-radius: 9px;
+    box-sizing: border-box;
     font-size: 12px;
     font-weight: 700;
     text-decoration: none;
@@ -284,12 +384,12 @@ body {
 }
 
 .marca {
-    padding: 18px;
-    margin-bottom: 14px;
-    border: 1px solid #e5e5e5;
-    border-radius: 14px;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin-bottom: 8px;
+    padding: 13px 14px;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid #e1e7ef;
+    border-radius: 13px;
+    box-shadow: 0 3px 10px rgba(35, 74, 105, 0.07);
 }
 .combustibles {
     display: flex;
@@ -411,27 +511,41 @@ body {
 }
 .marca-fila {
     width: 100%;
-    min-height: 96px;
+    min-height: 92px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 14px 10px 10px;
+    gap: 6px;
+    padding: 12px 28px 10px 10px;
     color: #111;
     font-family: Arial, sans-serif;
     text-align: center;
     background: rgba(255, 255, 255, 0.95);
     border: 1px solid #e1e7ef;
-    border-radius: 16px;
-    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.06);
+    border-radius: 14px;
+    box-shadow: 0 3px 10px rgba(35, 74, 105, 0.07);
     cursor: pointer;
+    position: relative;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.marca-fila::after {
+    content: "›";
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    color: #7b8b98;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1;
+    transform: translateY(-50%);
 }
 
 .marca-fila:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.1);
+    border-color: #c8d8e5;
+    box-shadow: 0 6px 16px rgba(35, 74, 105, 0.12);
 }
 
 .marca-fila:focus-visible {
@@ -442,20 +556,64 @@ body {
 #marcas {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    gap: 9px;
 }
 
 .marca-logo {
     width: 100%;
-    max-width: 118px;
-    height: 54px;
+    max-width: 112px;
+    height: 48px;
     object-fit: contain;
 }
 
 .marca-accion {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     color: #667085;
+}
+
+@media (max-width: 380px) {
+    .card {
+        padding: 20px 12px 42px;
+    }
+
+    .fuel-buttons {
+        gap: 6px;
+    }
+
+    .fuel-button {
+        min-height: 144px;
+        padding-inline: 4px;
+        border-radius: 18px 18px 12px 12px;
+    }
+
+    .fuel-button small {
+        font-size: 7px;
+    }
+
+    .fuel-button strong {
+        font-size: 42px;
+    }
+
+    .fuel-button em {
+        font-size: 9px;
+        letter-spacing: 2px;
+    }
+
+    .fuel-button span {
+        font-size: 11px;
+    }
+
+    .card > h2 {
+        font-size: 19px;
+    }
+}
+
+@media (min-width: 700px) {
+    .card {
+        padding-top: 32px;
+    }
+
 }
 
 .price-sign {
@@ -2192,8 +2350,15 @@ body {
 <body>
 
   <div class="card">
+    <section class="hero">
     <div class="app-header">
-  <h1>Gas</h1>
+  <h1 aria-label="GasPR">
+    <svg class="app-logo-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path fill-rule="evenodd" d="M6 2h8a2 2 0 0 1 2 2v16h1v2H3v-2h1V4a2 2 0 0 1 2-2Zm1 3v5h6V5H7Z" />
+      <path d="M16 6h2.2L22 9.8V18a3 3 0 0 1-6 0v-2h2v2a1 1 0 0 0 2 0v-7.4L17.4 8H16V6Z" />
+    </svg>
+    <span>Gas</span>
+  </h1>
   <p>Encuentra gasolina cerca de ti</p>
 </div>
 
@@ -2221,6 +2386,7 @@ body {
 </div>
 
     <div class="fecha" id="fecha"></div>
+    </section>
     <div class="controles">
     <button id="cercaDeMi">Buscar cerca de mí</button>
     <select id="municipio">
@@ -2307,7 +2473,6 @@ body {
 
   
 </div>
-<h2>Gasolineras cerca de ti</h2>
 <p id="contadorGasolineras"></p>
 <div id="gasolineras"></div>
     <h2>Precios por marca</h2>
