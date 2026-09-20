@@ -13,14 +13,32 @@ body {
     min-height: 100vh;
     text-align: center;
     background-color: #dff3fd;
+    overflow-x: hidden;
+    position: relative;
+    isolation: isolate;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
     background-image:
         linear-gradient(180deg, rgba(239, 250, 255, 0.14) 0%, rgba(239, 250, 255, 0.3) 100%),
         url("images/gaspr_tropical_background.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center top;
-    background-attachment: fixed;
-    overflow-x: hidden;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@media (max-width: 600px) {
+    body::before {
+        background-position: 62% top;
+    }
 }
 
 .card {
@@ -107,7 +125,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    font-family: Arial, sans-serif;
+    font-family: "Arial Narrow", "Roboto Condensed", "Helvetica Neue Condensed", Arial, sans-serif;
 
     box-shadow:
         0 7px 0 #111,
@@ -131,10 +149,21 @@ body {
 }
 
 
-.fuel-button small {
+.octane-rating {
     font-size: 8px;
-    font-weight: 800;
-    line-height: 1.2;
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -0.2px;
+    text-transform: uppercase;
+}
+
+.octane-method {
+    margin-top: -5px;
+    font-size: 6px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.15px;
+    text-transform: uppercase;
 }
 
 .fuel-button strong {
@@ -154,6 +183,8 @@ body {
 .fuel-button span {
     font-size: 13px;
     font-weight: 900;
+    letter-spacing: 0.25px;
+    transform: scaleX(0.94);
 }
 
 .fuel-button.regular {
@@ -587,8 +618,12 @@ body {
         border-radius: 18px 18px 12px 12px;
     }
 
-    .fuel-button small {
+    .octane-rating {
         font-size: 7px;
+    }
+
+    .octane-method {
+        font-size: 5.5px;
     }
 
     .fuel-button strong {
@@ -2364,21 +2399,24 @@ body {
 
 <div class="fuel-buttons">
 <button class="fuel-button regular" id="regular">
-    <small>MINIMUM OCTANE RATING</small>
+    <small class="octane-rating">MINIMUM OCTANE RATING</small>
+    <small class="octane-method">(R + M) / 2 METHOD</small>
     <strong>87</strong>
     <em>PRESS</em>
     <span>REGULAR</span>
 </button>
 
     <button class="fuel-button premium" id="premium">
-        <small>MINIMUM OCTANE RATING</small>
+        <small class="octane-rating">MINIMUM OCTANE RATING</small>
+        <small class="octane-method">(R + M) / 2 METHOD</small>
         <strong>91</strong>
         <em>PRESS</em>
         <span>PREMIUM</span>
     </button>
 
     <button class="fuel-button diesel" id="diesel">
-        <small>MINIMUM OCTANE RATING</small>
+        <small class="octane-rating">MINIMUM OCTANE RATING</small>
+        <small class="octane-method">(R + M) / 2 METHOD</small>
         <strong>D</strong>
         <em>PRESS</em>
         <span>DIESEL</span>
