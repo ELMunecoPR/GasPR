@@ -72,6 +72,24 @@ body::before {
     isolation: isolate;
 }
 
+.app-home {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 4px 6px;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 10px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.app-home:focus-visible {
+    outline: 3px solid rgba(13, 110, 253, 0.35);
+    outline-offset: 3px;
+}
+
 .app-logo-icon {
     width: 0.64em;
     height: 0.64em;
@@ -85,7 +103,7 @@ body::before {
     z-index: 1;
 }
 
-.app-header h1::after {
+.app-home::after {
     content: "PR";
     color: #0d6efd;
     order: 1;
@@ -93,7 +111,7 @@ body::before {
     z-index: 1;
 }
 
-.app-header h1 > span {
+.app-home > span {
     order: 0;
     position: relative;
     z-index: 1;
@@ -330,13 +348,69 @@ body::before {
 }
 
 .gasolinera-cercana {
+    --marca-color: #667085;
+    --marca-secundario: #344054;
+    --marca-suave: #f5f7fa;
     margin-bottom: 8px;
-    padding: 11px 13px;
+    padding: 12px;
     text-align: left;
-    background: rgba(255, 255, 255, 0.96);
-    border: 1px solid #e1e7ef;
-    border-radius: 13px;
-    box-shadow: 0 3px 10px rgba(35, 74, 105, 0.07);
+    background: linear-gradient(135deg, var(--marca-suave) 0, rgba(255, 255, 255, 0.98) 42%);
+    border: 1px solid rgba(102, 112, 133, 0.2);
+    border-left: 5px solid var(--marca-color);
+    border-radius: 15px;
+    box-shadow: 0 5px 14px rgba(35, 74, 105, 0.1);
+    overflow: hidden;
+}
+
+.gasolinera-cercana--76 { --marca-color: #f15a24; --marca-secundario: #162d6b; --marca-suave: #fff7f1; }
+.gasolinera-cercana--american { --marca-color: #d62828; --marca-secundario: #174a8b; --marca-suave: #fff5f5; }
+.gasolinera-cercana--bitas { --marca-color: #173b6c; --marca-secundario: #e45b2a; --marca-suave: #f3f7fc; }
+.gasolinera-cercana--ecomaxx { --marca-color: #087f7a; --marca-secundario: #174d82; --marca-suave: #f0faf9; }
+.gasolinera-cercana--gulf { --marca-color: #f47b20; --marca-secundario: #145a96; --marca-suave: #fff7ef; }
+.gasolinera-cercana--mobil { --marca-color: #0b4f9c; --marca-secundario: #d71920; --marca-suave: #f2f7fc; }
+.gasolinera-cercana--phillips66 { --marca-color: #c9282d; --marca-secundario: #20252a; --marca-suave: #fff4f4; }
+.gasolinera-cercana--puma { --marca-color: #006b54; --marca-secundario: #d71920; --marca-suave: #eff9f6; }
+.gasolinera-cercana--shell { --marca-color: #e31837; --marca-secundario: #f9c900; --marca-suave: #fff9e8; }
+.gasolinera-cercana--sunoco { --marca-color: #0757a5; --marca-secundario: #f4c400; --marca-suave: #f0f7ff; }
+.gasolinera-cercana--texaco { --marca-color: #d71920; --marca-secundario: #202124; --marca-suave: #fff4f4; }
+.gasolinera-cercana--texpress { --marca-color: #f58220; --marca-secundario: #3f3a3c; --marca-suave: #fff6ee; }
+.gasolinera-cercana--total { --marca-color: #e52335; --marca-secundario: #153d7a; --marca-suave: #fff3f4; }
+.gasolinera-cercana--ultratopfuel { --marca-color: #c5162e; --marca-secundario: #e8b923; --marca-suave: #fff8eb; }
+
+.gasolinera-encabezado {
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+}
+
+.gasolinera-logo-contenedor {
+    width: 58px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    box-sizing: border-box;
+    background: white;
+    border: 1px solid rgba(52, 64, 84, 0.12);
+    border-radius: 10px;
+}
+
+.gasolinera-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.gasolinera-logo-neutral {
+    color: var(--marca-secundario);
+    font-size: 24px;
+    line-height: 1;
+}
+
+.gasolinera-resumen {
+    min-width: 0;
 }
 
 #gasolineras {
@@ -369,15 +443,19 @@ body::before {
 }
 
 .gasolinera-cercana.mas-cercana {
-    border: 2px solid #0d6efd;
-    background: #f4f8ff;
-    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.12);
+    border-top-color: var(--marca-color);
+    border-right-color: var(--marca-color);
+    border-bottom-color: var(--marca-color);
+    box-shadow: 0 6px 16px rgba(13, 110, 253, 0.16);
 }
 
 .gasolinera-cercana .etiqueta-cercana {
-    margin-bottom: 7px;
-    padding: 4px 9px;
-    font-size: 11px;
+    display: inline-block;
+    margin-bottom: 4px;
+    padding: 3px 8px;
+    color: white;
+    background: var(--marca-color);
+    font-size: 10px;
 }
 
 .gasolinera-nombre {
@@ -392,7 +470,15 @@ body::before {
     margin-top: 4px;
     font-size: 12px;
     font-weight: 700;
-    color: #0d6efd;
+    color: var(--marca-secundario);
+}
+
+.gasolinera-direccion {
+    display: block;
+    margin-top: 8px;
+    color: #5e6875;
+    font-size: 12px;
+    line-height: 1.35;
 }
 
 .gasolinera-como-llegar {
@@ -412,6 +498,243 @@ body::before {
 .gasolinera-como-llegar:focus-visible {
     outline: 3px solid rgba(13, 110, 253, 0.35);
     outline-offset: 2px;
+}
+
+.gasolinera-precios-usuario {
+    margin-top: 9px;
+    padding: 8px 9px;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(52, 64, 84, 0.1);
+    border-radius: 10px;
+}
+
+.precio-usuario-fila {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 2px 0;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.precio-usuario-fila strong {
+    color: #172733;
+    font-size: 13px;
+}
+
+.precio-usuario-fila--regular { color: #a47700; }
+.precio-usuario-fila--premium { color: #c52233; }
+.precio-usuario-fila--diesel { color: #087f4f; }
+
+.precio-usuario-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px 9px;
+    margin-top: 5px;
+    color: #667085;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.precio-usuario-antiguo {
+    color: #9a6700;
+}
+
+.gasolinera-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 8px;
+}
+
+.gasolinera-acciones .gasolinera-como-llegar {
+    margin-top: 0;
+}
+
+.gasolinera-reportar {
+    min-height: 38px;
+    padding: 8px 11px;
+    color: #0d6efd;
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid #0d6efd;
+    border-radius: 9px;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.gasolinera-reportar:focus-visible {
+    outline: 3px solid rgba(13, 110, 253, 0.28);
+    outline-offset: 2px;
+}
+
+.reporte-precio-modal {
+    position: relative;
+    width: min(92vw, 390px);
+    max-height: 88vh;
+    max-height: 88dvh;
+    padding: 20px;
+    overflow-y: auto;
+    text-align: left;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 20px 55px rgba(22, 38, 55, 0.25);
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+}
+
+.reporte-estacion-cabecera {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 11px;
+    align-items: center;
+    padding-right: 24px;
+}
+
+.reporte-estacion-logo {
+    width: 64px;
+    height: 52px;
+    padding: 6px;
+    object-fit: contain;
+    background: #fff;
+    border: 1px solid #e1e7ef;
+    border-radius: 11px;
+    box-sizing: border-box;
+}
+
+.reporte-estacion-logo[hidden] {
+    display: none;
+}
+
+.reporte-estacion-nombre {
+    margin: 0;
+    color: #172733;
+    font-size: 17px;
+    line-height: 1.2;
+}
+
+.reporte-estacion-detalle {
+    margin: 3px 0 0;
+    color: #667085;
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.reporte-precio-modal h3 {
+    margin: 18px 0 10px;
+    color: #172733;
+    font-size: 20px;
+}
+
+.reporte-campo {
+    display: grid;
+    grid-template-columns: 82px minmax(0, 1fr) 32px;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 9px;
+}
+
+.reporte-campo label {
+    color: #344054;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.reporte-campo input {
+    width: 100%;
+    min-height: 44px;
+    padding: 9px 10px;
+    border: 1px solid #cfd8e3;
+    border-radius: 9px;
+    box-sizing: border-box;
+    color: #172733;
+    background: #fff;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.reporte-campo input:focus {
+    border-color: #0d6efd;
+    outline: 3px solid rgba(13, 110, 253, 0.15);
+}
+
+.reporte-unidad {
+    color: #667085;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.reporte-ubicacion-aviso,
+.reporte-error {
+    margin: 9px 0;
+    padding: 8px 10px;
+    border-radius: 9px;
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.reporte-ubicacion-aviso {
+    color: #725100;
+    background: #fff7d6;
+}
+
+.reporte-error {
+    color: #9f1829;
+    background: #fff0f2;
+    font-weight: 700;
+}
+
+.reporte-botones {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.reporte-botones button {
+    min-height: 44px;
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.reporte-guardar {
+    color: #fff;
+    background: #0d6efd;
+    border: 1px solid #0d6efd;
+}
+
+.reporte-cancelar {
+    color: #344054;
+    background: #fff;
+    border: 1px solid #cfd8e3;
+}
+
+.gaspr-toast {
+    position: fixed;
+    left: 50%;
+    bottom: max(22px, env(safe-area-inset-bottom));
+    z-index: 1200;
+    padding: 10px 15px;
+    color: #fff;
+    background: rgba(23, 39, 51, 0.94);
+    border-radius: 999px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    font-size: 13px;
+    font-weight: 800;
+    transform: translate(-50%, 18px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.gaspr-toast.activo {
+    transform: translate(-50%, 0);
+    opacity: 1;
 }
 
 .marca {
@@ -2387,12 +2710,14 @@ body::before {
   <div class="card">
     <section class="hero">
     <div class="app-header">
-  <h1 aria-label="GasPR">
-    <svg class="app-logo-icon" viewBox="0 0 24 24" aria-hidden="true">
-      <path fill-rule="evenodd" d="M6 2h8a2 2 0 0 1 2 2v16h1v2H3v-2h1V4a2 2 0 0 1 2-2Zm1 3v5h6V5H7Z" />
-      <path d="M16 6h2.2L22 9.8V18a3 3 0 0 1-6 0v-2h2v2a1 1 0 0 0 2 0v-7.4L17.4 8H16V6Z" />
-    </svg>
-    <span>Gas</span>
+  <h1>
+    <a class="app-home" href="/" aria-label="Volver al inicio de GasPR">
+      <svg class="app-logo-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path fill-rule="evenodd" d="M6 2h8a2 2 0 0 1 2 2v16h1v2H3v-2h1V4a2 2 0 0 1 2-2Zm1 3v5h6V5H7Z" />
+        <path d="M16 6h2.2L22 9.8V18a3 3 0 0 1-6 0v-2h2v2a1 1 0 0 0 2 0v-7.4L17.4 8H16V6Z" />
+      </svg>
+      <span>Gas</span>
+    </a>
   </h1>
   <p>Encuentra gasolina cerca de ti</p>
 </div>
@@ -2517,7 +2842,159 @@ body::before {
     <div id="marcas"></div>
   </div>
 
+  <div id="reportePrecioPopup" class="fuel-popup" role="dialog" aria-modal="true" aria-labelledby="reportePrecioTitulo">
+    <div class="reporte-precio-modal">
+      <button id="cerrarReportePrecio" class="cerrar-popup" type="button" aria-label="Cerrar">×</button>
+
+      <div class="reporte-estacion-cabecera">
+        <img id="reporteEstacionLogo" class="reporte-estacion-logo" src="" alt="" hidden>
+        <div>
+          <h2 id="reporteEstacionNombre" class="reporte-estacion-nombre">Estación</h2>
+          <p id="reporteEstacionDireccion" class="reporte-estacion-detalle"></p>
+          <p id="reporteEstacionDistancia" class="reporte-estacion-detalle"></p>
+        </div>
+      </div>
+
+      <form id="reportePrecioForm" novalidate>
+        <h3 id="reportePrecioTitulo">Reportar precios</h3>
+
+        <div class="reporte-campo">
+          <label for="reporteRegular">Regular</label>
+          <input id="reporteRegular" name="regular" type="number" inputmode="decimal" min="50" max="300" step="0.1" placeholder="116.7">
+          <span class="reporte-unidad">¢/L</span>
+        </div>
+
+        <div class="reporte-campo">
+          <label for="reportePremium">Premium</label>
+          <input id="reportePremium" name="premium" type="number" inputmode="decimal" min="50" max="300" step="0.1" placeholder="132.7">
+          <span class="reporte-unidad">¢/L</span>
+        </div>
+
+        <div class="reporte-campo">
+          <label for="reporteDiesel">Diésel</label>
+          <input id="reporteDiesel" name="diesel" type="number" inputmode="decimal" min="50" max="300" step="0.1" placeholder="149.7">
+          <span class="reporte-unidad">¢/L</span>
+        </div>
+
+        <p id="reporteUbicacionAviso" class="reporte-ubicacion-aviso" hidden></p>
+        <p id="reportePrecioError" class="reporte-error" role="alert" hidden></p>
+
+        <div class="reporte-botones">
+          <button class="reporte-cancelar" id="cancelarReportePrecio" type="button">Cancelar</button>
+          <button class="reporte-guardar" type="submit">Guardar precio</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="gasprToast" class="gaspr-toast" role="status" aria-live="polite">Precio reportado</div>
+
   <script>
+ let detectarMarcaEstacionCercana = () => ({
+    marca: null,
+    tema: "neutral",
+    logo: null
+ });
+
+ const CLAVE_REPORTES_PRECIOS = "gaspr_reportes_precios_v1";
+
+ function cargarReportesPrecios() {
+    try {
+        const guardados = JSON.parse(localStorage.getItem(CLAVE_REPORTES_PRECIOS) || "{}");
+        return guardados && typeof guardados === "object" && !Array.isArray(guardados)
+            ? guardados
+            : {};
+    } catch (error) {
+        console.warn("No se pudieron leer los reportes locales.", error);
+        return {};
+    }
+ }
+
+ function obtenerReportePrecio(placeId) {
+    if (!placeId) {
+        return null;
+    }
+
+    return cargarReportesPrecios()[placeId] || null;
+ }
+
+ function guardarReportePrecio(reporte) {
+    const reportes = cargarReportesPrecios();
+    reportes[reporte.placeId] = reporte;
+
+    try {
+        localStorage.setItem(CLAVE_REPORTES_PRECIOS, JSON.stringify(reportes));
+        return true;
+    } catch (error) {
+        console.error("No se pudo guardar el reporte local.", error);
+        return false;
+    }
+ }
+
+ function escaparHtml(valor) {
+    return String(valor ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+ }
+
+ function textoAntiguedad(fechaIso) {
+    const fecha = new Date(fechaIso).getTime();
+    const transcurrido = Date.now() - fecha;
+
+    if (!Number.isFinite(fecha) || transcurrido < 0) {
+        return "Actualizado recientemente";
+    }
+
+    const minutos = Math.floor(transcurrido / 60000);
+    if (minutos < 1) return "Actualizado ahora";
+    if (minutos < 60) return `Actualizado hace ${minutos} min`;
+
+    const horas = Math.floor(minutos / 60);
+    if (horas < 24) return `Actualizado hace ${horas} h`;
+
+    const dias = Math.floor(horas / 24);
+    return `Actualizado hace ${dias} d`;
+ }
+
+ function htmlReportePrecio(reporte) {
+    if (!reporte) {
+        return "";
+    }
+
+    const combustibles = [
+        ["regular", "Regular"],
+        ["premium", "Premium"],
+        ["diesel", "Diésel"]
+    ];
+    const filas = combustibles
+        .filter(([clave]) => Number.isFinite(reporte[clave]))
+        .map(([clave, etiqueta]) => `
+            <div class="precio-usuario-fila precio-usuario-fila--${clave}">
+              <span>${etiqueta}</span>
+              <strong>${reporte[clave].toFixed(1)} ¢/L</strong>
+            </div>
+        `)
+        .join("");
+
+    if (!filas) {
+        return "";
+    }
+
+    const esAntiguo = Date.now() - new Date(reporte.reportedAt).getTime() > 24 * 60 * 60 * 1000;
+    return `
+      <div class="gasolinera-precios-usuario">
+        ${filas}
+        <div class="precio-usuario-meta">
+          <span>Reportado por usuario</span>
+          <span>${textoAntiguedad(reporte.reportedAt)}</span>
+          ${esAntiguo ? '<span class="precio-usuario-antiguo">Puede haber cambiado</span>' : ""}
+        </div>
+      </div>
+    `;
+ }
 
  fetch("/api/precios")
       .then(respuesta => respuesta.json())
@@ -2616,8 +3093,8 @@ const temasMarca = {
 
 const aliasesMarca = {
     "76": ["76"],
-    "American": ["american"],
-    "Bita's": ["bita"],
+    "American": ["american", "american gasoline"],
+    "Bita's": ["bita", "bita's", "bitas", "bita s"],
     "EcoMaxx": ["ecomaxx", "eco maxx"],
     "Gulf": ["gulf"],
     "Mobil": ["mobil"],
@@ -2626,10 +3103,49 @@ const aliasesMarca = {
     "Shell": ["shell"],
     "Sunoco": ["sunoco"],
     "Texaco": ["texaco"],
-    "T-Express": ["t-express", "texpress"],
-    "Total": ["total", "totalenergies"],
-    "Ultra Top Fuel": ["ultra top fuel"]
+    "T-Express": ["t-express", "texpress", "t express"],
+    "Total": ["total", "totalenergies", "total energies"],
+    "Ultra Top Fuel": ["ultra top fuel", "ultratopfuel"]
 };
+
+const RADIO_BUSQUEDA_MARCA_MILLAS = 10;
+
+function normalizarNombreMarca(valor) {
+    return String(valor || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim();
+}
+
+function detectarMarcaEstacion(nombreEstacion) {
+    const nombreNormalizado = normalizarNombreMarca(nombreEstacion);
+    const coincidencias = Object.entries(aliasesMarca)
+        .flatMap(([marca, aliases]) => aliases.map(alias => ({
+            marca,
+            alias: normalizarNombreMarca(alias)
+        })))
+        .filter(({ alias }) => alias && nombreNormalizado.includes(alias))
+        .sort((a, b) => b.alias.length - a.alias.length);
+
+    if (coincidencias.length === 0) {
+        return {
+            marca: null,
+            tema: "neutral",
+            logo: null
+        };
+    }
+
+    const marca = coincidencias[0].marca;
+    return {
+        marca,
+        tema: temasMarca[marca] || "neutral",
+        logo: logosMarcas[marca] || null
+    };
+}
+
+detectarMarcaEstacionCercana = detectarMarcaEstacion;
 
 let marcaActiva = null;
 
@@ -2678,22 +3194,44 @@ function abrirEstacionesMarca(marcaSeleccionada) {
 
         const estaciones = await respuesta.json();
 
-const nombresValidos =
-    aliasesMarca[marcaSeleccionada] || [marcaSeleccionada.toLowerCase()];
+const nombresValidos = (
+    aliasesMarca[marcaSeleccionada] || [marcaSeleccionada]
+).map(normalizarNombreMarca);
 
-const estacionesFiltradas = estaciones.filter(estacion => {
-    const nombre =
-        estacion.displayName?.text?.toLowerCase() || "";
+const estacionesFiltradas = estaciones
+    .map(estacion => {
+        const lat = estacion.location?.latitude;
+        const lng = estacion.location?.longitude;
 
-    return nombresValidos.some(alias =>
-        nombre.includes(alias.toLowerCase())
-    );
-});
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+            return null;
+        }
+
+        return {
+            ...estacion,
+            distancia: calcularDistancia(
+                latitud,
+                longitud,
+                lat,
+                lng
+            )
+        };
+    })
+    .filter(estacion => {
+        if (!estacion || estacion.distancia > RADIO_BUSQUEDA_MARCA_MILLAS) {
+            return false;
+        }
+
+        const nombre = normalizarNombreMarca(estacion.displayName?.text);
+        return nombresValidos.some(alias => nombre.includes(alias));
+    })
+    .sort((a, b) => a.distancia - b.distancia);
 
             const contenido = document.getElementById("marcaPopupContenido");
 
 if (estacionesFiltradas.length === 0) {
-    contenido.innerHTML = "<p>No encontramos estaciones cercanas.</p>";
+    contenido.textContent =
+        `No encontramos estaciones ${marcaSeleccionada} cerca de tu ubicación.`;
 } else {
     contenido.innerHTML = estacionesFiltradas
         .slice(0, 10)
@@ -2707,17 +3245,10 @@ if (estacionesFiltradas.length === 0) {
             const lat = estacion.location?.latitude;
             const lng = estacion.location?.longitude;
 
-            const distancia = calcularDistancia(
-                latitud,
-                longitud,
-                lat,
-                lng
-            );
-
             return `
                 <div class="estacion-marca">
                     <strong>${nombre}</strong>
-                    <span class="estacion-distancia">${distancia.toFixed(2)} millas</span>
+                    <span class="estacion-distancia">${estacion.distancia.toFixed(2)} millas</span>
                     <span class="estacion-direccion">${direccion}</span>
 
                     <a
@@ -2778,6 +3309,9 @@ document.getElementById("marcaPopup").addEventListener("click", (evento) => {
 });
       });
       let gasolinerasActuales = [];
+      let ubicacionBusquedaActual = null;
+      let estacionReporteActiva = null;
+      let temporizadorToast = null;
      async function cargarGasolineras() {
         const municipioSeleccionado = document.getElementById("municipio").value;
 
@@ -2819,12 +3353,138 @@ function calcularDistancia(lat1, lon1, lat2, lon2) {
 
   return 2 * R * Math.asin(Math.sqrt(a));
 }
+
+function renderizarGasolinerasCercanas() {
+  if (!ubicacionBusquedaActual) {
+    return;
+  }
+
+  const { latitud, longitud } = ubicacionBusquedaActual;
+  const contenedor = document.getElementById("gasolineras");
+  contenedor.innerHTML = gasolinerasActuales
+    .map((estacion, index) => {
+      const nombre = estacion.displayName?.text || "Gasolinera";
+      const direccion = estacion.formattedAddress || "Dirección no disponible";
+      const placeId = estacion.id || `coordenadas:${estacion.location.latitude},${estacion.location.longitude}`;
+      const identidad = detectarMarcaEstacionCercana(nombre);
+      const reporte = obtenerReportePrecio(placeId);
+      const logo = identidad.logo
+        ? `<img class="gasolinera-logo" src="${identidad.logo}" alt="Logo de ${escaparHtml(identidad.marca)}">`
+        : '<span class="gasolinera-logo-neutral" aria-hidden="true">⛽</span>';
+
+      return `
+        <div class="gasolinera-cercana gasolinera-cercana--${identidad.tema} ${index === 0 ? "mas-cercana" : ""}" data-place-id="${escaparHtml(placeId)}">
+          <div class="gasolinera-encabezado">
+            <div class="gasolinera-logo-contenedor">${logo}</div>
+            <div class="gasolinera-resumen">
+              ${index === 0 ? '<div class="etiqueta-cercana">Más cercana</div>' : ''}
+              <strong class="gasolinera-nombre">${escaparHtml(nombre)}</strong>
+              <span class="gasolinera-distancia">${estacion.distancia.toFixed(2)} millas</span>
+            </div>
+          </div>
+          <span class="gasolinera-direccion">${escaparHtml(direccion)}</span>
+          ${htmlReportePrecio(reporte)}
+          <div class="gasolinera-acciones">
+            <a class="gasolinera-como-llegar" href="https://www.google.com/maps/dir/?api=1&origin=${latitud}%2C${longitud}&destination=${estacion.location.latitude}%2C${estacion.location.longitude}&travelmode=driving" target="_blank" rel="noopener noreferrer">
+              Cómo llegar
+            </a>
+            <button class="gasolinera-reportar" type="button" data-place-id="${escaparHtml(placeId)}">
+              Reportar precio
+            </button>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function cerrarModalReporte() {
+  document.getElementById("reportePrecioPopup").classList.remove("activo");
+  estacionReporteActiva = null;
+}
+
+function mostrarToast(mensaje) {
+  const toast = document.getElementById("gasprToast");
+  toast.textContent = mensaje;
+  toast.classList.add("activo");
+  clearTimeout(temporizadorToast);
+  temporizadorToast = setTimeout(() => toast.classList.remove("activo"), 2200);
+}
+
+function valorInputReporte(id, valor) {
+  document.getElementById(id).value = Number.isFinite(valor) ? valor.toFixed(1) : "";
+}
+
+function abrirModalReporte(estacion) {
+  estacionReporteActiva = estacion;
+  const nombre = estacion.displayName?.text || "Gasolinera";
+  const direccion = estacion.formattedAddress || "Dirección no disponible";
+  const placeId = estacion.id || `coordenadas:${estacion.location.latitude},${estacion.location.longitude}`;
+  const identidad = detectarMarcaEstacionCercana(nombre);
+  const reporte = obtenerReportePrecio(placeId);
+  const logo = document.getElementById("reporteEstacionLogo");
+
+  logo.hidden = !identidad.logo;
+  logo.src = identidad.logo || "";
+  logo.alt = identidad.marca ? `Logo de ${identidad.marca}` : "";
+  document.getElementById("reporteEstacionNombre").textContent = nombre;
+  document.getElementById("reporteEstacionDireccion").textContent = direccion;
+  document.getElementById("reporteEstacionDistancia").textContent =
+    `${estacion.distancia.toFixed(2)} millas de tu ubicación`;
+  valorInputReporte("reporteRegular", reporte?.regular);
+  valorInputReporte("reportePremium", reporte?.premium);
+  valorInputReporte("reporteDiesel", reporte?.diesel);
+  document.getElementById("reportePrecioError").hidden = true;
+
+  const aviso = document.getElementById("reporteUbicacionAviso");
+  aviso.hidden = true;
+  document.getElementById("reportePrecioPopup").classList.add("activo");
+  document.getElementById("reporteRegular").focus();
+
+  navigator.geolocation.getCurrentPosition(posicion => {
+    if (estacionReporteActiva !== estacion) return;
+
+    const distanciaActual = calcularDistancia(
+      posicion.coords.latitude,
+      posicion.coords.longitude,
+      estacion.location.latitude,
+      estacion.location.longitude
+    );
+
+    if (distanciaActual > 0.5) {
+      aviso.textContent = "Parece que no estás cerca de esta estación. Puedes continuar para probar el prototipo.";
+      aviso.hidden = false;
+    }
+  }, () => {
+    if (estacionReporteActiva !== estacion) return;
+    aviso.textContent = "No pudimos verificar tu cercanía. Puedes continuar con el reporte.";
+    aviso.hidden = false;
+  }, {
+    enableHighAccuracy: true,
+    timeout: 8000,
+    maximumAge: 60000
+  });
+}
+
+function leerPrecioReporte(id) {
+  const valor = document.getElementById(id).value.trim();
+  if (valor === "") return null;
+
+  const numero = Number(valor);
+  return Number.isFinite(numero) && numero >= 50 && numero <= 300
+    ? Math.round(numero * 10) / 10
+    : NaN;
+}
 cargarGasolineras();
 document.getElementById("municipio").addEventListener("change", cargarGasolineras);
 document.getElementById("cercaDeMi").addEventListener("click", () => {
   navigator.geolocation.getCurrentPosition(async posicion => {
     const latitudUsuario = posicion.coords.latitude;
     const longitudUsuario = posicion.coords.longitude;
+    ubicacionBusquedaActual = {
+      latitud: latitudUsuario,
+      longitud: longitudUsuario
+    };
     const municipioSelect = document.getElementById("municipio");
 municipioSelect.value = "";
 
@@ -2851,23 +3511,87 @@ gasolinerasActuales = gasolinerasActuales
   if (gasolinerasActuales.length > 0) {
   municipioSelect.value = "";
 }
-  const contenedor = document.getElementById("gasolineras");
-  contenedor.innerHTML = gasolinerasActuales
-  .map((estacion, index) => `
-    <div class="gasolinera-cercana ${index === 0 ? "mas-cercana" : ""}">
-      ${index === 0 ? '<div class="etiqueta-cercana">Más cercana</div>' : ''}
-      <strong class="gasolinera-nombre">${estacion.displayName.text}</strong>
-      <span class="gasolinera-distancia">${estacion.distancia.toFixed(2)} millas</span>
-      <a class="gasolinera-como-llegar" href="https://www.google.com/maps/dir/?api=1&origin=${latitudUsuario}%2C${longitudUsuario}&destination=${estacion.location.latitude}%2C${estacion.location.longitude}&travelmode=driving" target="_blank">
-        Cómo llegar
-      </a>
-    </div>
-  `)
-  .join("");
+  renderizarGasolinerasCercanas();
   },
 error => {
   alert("No pudimos obtener tu ubicación. Verifica que tengas la ubicación activada y dale permiso a GasPR.");
 });
+});
+
+document.getElementById("gasolineras").addEventListener("click", evento => {
+  const boton = evento.target.closest(".gasolinera-reportar");
+  if (!boton) return;
+
+  const estacion = gasolinerasActuales.find(item => {
+    const id = item.id || `coordenadas:${item.location?.latitude},${item.location?.longitude}`;
+    return id === boton.dataset.placeId;
+  });
+
+  if (estacion?.location) {
+    abrirModalReporte(estacion);
+  }
+});
+
+document.getElementById("reportePrecioForm").addEventListener("submit", evento => {
+  evento.preventDefault();
+  if (!estacionReporteActiva) return;
+
+  const regular = leerPrecioReporte("reporteRegular");
+  const premium = leerPrecioReporte("reportePremium");
+  const diesel = leerPrecioReporte("reporteDiesel");
+  const error = document.getElementById("reportePrecioError");
+
+  if ([regular, premium, diesel].some(Number.isNaN)) {
+    error.textContent = "Cada precio debe estar entre 50.0 y 300.0 ¢/L.";
+    error.hidden = false;
+    return;
+  }
+
+  if ([regular, premium, diesel].every(valor => valor === null)) {
+    error.textContent = "Escribe al menos un precio para guardar el reporte.";
+    error.hidden = false;
+    return;
+  }
+
+  const nombre = estacionReporteActiva.displayName?.text || "Gasolinera";
+  const identidad = detectarMarcaEstacionCercana(nombre);
+  const placeId = estacionReporteActiva.id ||
+    `coordenadas:${estacionReporteActiva.location.latitude},${estacionReporteActiva.location.longitude}`;
+  const reporte = {
+    placeId,
+    stationName: nombre,
+    brand: identidad.marca,
+    address: estacionReporteActiva.formattedAddress || "",
+    regular,
+    premium,
+    diesel,
+    reportedAt: new Date().toISOString(),
+    source: "usuario"
+  };
+
+  if (!guardarReportePrecio(reporte)) {
+    error.textContent = "No se pudo guardar el precio en este navegador.";
+    error.hidden = false;
+    return;
+  }
+
+  cerrarModalReporte();
+  renderizarGasolinerasCercanas();
+  mostrarToast("Precio reportado");
+});
+
+document.getElementById("cerrarReportePrecio").addEventListener("click", cerrarModalReporte);
+document.getElementById("cancelarReportePrecio").addEventListener("click", cerrarModalReporte);
+document.getElementById("reportePrecioPopup").addEventListener("click", evento => {
+  if (evento.target.id === "reportePrecioPopup") {
+    cerrarModalReporte();
+  }
+});
+
+document.addEventListener("keydown", evento => {
+  if (evento.key === "Escape" && document.getElementById("reportePrecioPopup").classList.contains("activo")) {
+    cerrarModalReporte();
+  }
 });
 
   </script>
