@@ -2897,6 +2897,58 @@ body::before {
  });
 
  const CLAVE_REPORTES_PRECIOS = "gaspr_reportes_precios_v1";
+ const reportesCompartidos = new Map();
+ let guardandoReporte = false;
+
+ function normalizarReporteCompartido(reporte) {
+    if (!reporte || typeof reporte.place_id !== "string" || !reporte.place_id) {
+        throw new Error("Reporte compartido inválido");
+    }
+    const resultado = {
+        placeId: reporte.place_id,
+        stationName: reporte.station_name,
+        brand: reporte.brand,
+        address: reporte.address,
+        reportedAt: reporte.reported_at,
+        source: reporte.source
+    };
+    for (const combustible of ["regular", "premium", "diesel"]) {
+        const precio = reporte[combustible];
+        resultado[combustible] = precio == null ? null : Number(precio);
+        if (resultado[combustible] !== null && !Number.isFinite(resultado[combustible])) {
+            throw new Error("Precio compartido inválido");
+        }
+    }
+    return resultado;
+ }
+
+ function actualizarTarjetasReportes() {
+    document.querySelectorAll(".gasolinera-cercana[data-place-id]").forEach(tarjeta => {
+        tarjeta.querySelector(".gasolinera-precios-usuario")?.remove();
+        tarjeta.querySelector(".gasolinera-acciones")?.insertAdjacentHTML(
+            "beforebegin", htmlReportePrecio(obtenerReportePrecio(tarjeta.dataset.placeId))
+        );
+    });
+ }
+
+ async function cargarReportesCompartidos() {
+    try {
+        const respuesta = await fetch("/api/station-prices", { signal: AbortSignal.timeout(10000) });
+        if (!respuesta.ok) throw new Error("No se pudieron cargar los reportes");
+        const datos = await respuesta.json();
+        if (!datos.ok || !Array.isArray(datos.reports)) throw new Error("Respuesta inválida");
+        const reportes = datos.reports.map(normalizarReporteCompartido);
+        for (const reporte of reportes) {
+            // Un guardado realizado durante la carga inicial tiene prioridad.
+            if (!reportesCompartidos.has(reporte.placeId)) {
+                reportesCompartidos.set(reporte.placeId, reporte);
+            }
+        }
+        actualizarTarjetasReportes();
+    } catch {
+        mostrarToast("No se pudieron cargar los precios compartidos. Se mostrarán los reportes locales disponibles.");
+    }
+ }
 
  function cargarReportesPrecios() {
     try {
@@ -2915,7 +2967,7 @@ body::before {
         return null;
     }
 
-    return cargarReportesPrecios()[placeId] || null;
+    return reportesCompartidos.get(placeId) || cargarReportesPrecios()[placeId] || null;
  }
 
  function guardarReportePrecio(reporte) {
@@ -3415,8 +3467,10 @@ function valorInputReporte(id, valor) {
   document.getElementById(id).value = Number.isFinite(valor) ? valor.toFixed(1) : "";
 }
 
-function abrirModalReporte(estacion) {
+async function abrirModalReporte(estacion) {
   estacionReporteActiva = estacion;
+  await cargaReportesCompartidos;
+  if (estacionReporteActiva !== estacion) return;
   const nombre = estacion.displayName?.text || "Gasolinera";
   const direccion = estacion.formattedAddress || "Dirección no disponible";
   const placeId = estacion.id || `coordenadas:${estacion.location.latitude},${estacion.location.longitude}`;
@@ -3475,6 +3529,7 @@ function leerPrecioReporte(id) {
     ? Math.round(numero * 10) / 10
     : NaN;
 }
+const cargaReportesCompartidos = cargarReportesCompartidos();
 cargarGasolineras();
 document.getElementById("municipio").addEventListener("change", cargarGasolineras);
 document.getElementById("cercaDeMi").addEventListener("click", () => {
@@ -3532,9 +3587,10 @@ document.getElementById("gasolineras").addEventListener("click", evento => {
   }
 });
 
-document.getElementById("reportePrecioForm").addEventListener("submit", evento => {
+document.getElementById("reportePrecioForm").addEventListener("submit", async evento => {
   evento.preventDefault();
-  if (!estacionReporteActiva) return;
+  if (!estacionReporteActiva || guardandoReporte) return;
+  const estacionEnviada = estacionReporteActiva;
 
   const regular = leerPrecioReporte("reporteRegular");
   const premium = leerPrecioReporte("reportePremium");
@@ -3564,20 +3620,44 @@ document.getElementById("reportePrecioForm").addEventListener("submit", evento =
     address: estacionReporteActiva.formattedAddress || "",
     regular,
     premium,
-    diesel,
-    reportedAt: new Date().toISOString(),
-    source: "usuario"
+    diesel
   };
 
-  if (!guardarReportePrecio(reporte)) {
-    error.textContent = "No se pudo guardar el precio en este navegador.";
-    error.hidden = false;
-    return;
+  const botonGuardar = evento.currentTarget.querySelector('button[type="submit"]');
+  guardandoReporte = true;
+  botonGuardar.disabled = true;
+  error.hidden = true;
+  try {
+    const respuesta = await fetch("/api/station-prices", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(reporte),
+      signal: AbortSignal.timeout(15000)
+    });
+    if (!respuesta.ok) throw new Error("No se pudo guardar el reporte");
+    const datos = await respuesta.json();
+    if (!datos.ok) throw new Error("Respuesta inválida");
+    const compartido = normalizarReporteCompartido(datos.report);
+    if (compartido.placeId !== placeId) throw new Error("Estación incorrecta");
+    reportesCompartidos.set(placeId, compartido);
+    const respaldoGuardado = guardarReportePrecio(compartido);
+    actualizarTarjetasReportes();
+    if (estacionReporteActiva === estacionEnviada) cerrarModalReporte();
+    mostrarToast(respaldoGuardado
+      ? "Precio reportado"
+      : "Precio compartido guardado. No se pudo guardar el respaldo en este navegador.");
+  } catch {
+    const mensaje = "No se pudo confirmar el guardado del precio compartido. Tus datos siguen en el formulario; revisa la conexión e intenta nuevamente.";
+    if (estacionReporteActiva === estacionEnviada) {
+      error.textContent = mensaje;
+      error.hidden = false;
+    } else {
+      mostrarToast(mensaje);
+    }
+  } finally {
+    guardandoReporte = false;
+    botonGuardar.disabled = false;
   }
-
-  cerrarModalReporte();
-  renderizarGasolinerasCercanas();
-  mostrarToast("Precio reportado");
 });
 
 document.getElementById("cerrarReportePrecio").addEventListener("click", cerrarModalReporte);
