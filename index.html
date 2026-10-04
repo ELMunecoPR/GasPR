@@ -3739,5 +3739,156 @@ document.addEventListener("keydown", evento => {
         </div>
     </div>
 </div>
+<script>
+// Se crea únicamente al abrir este navegador/origen con ?migrar=1.
+function iniciarMigracionTemporal() {
+    if (new URLSearchParams(window.location.search).get("migrar") !== "1") return;
+    const seccion = document.createElement("section");
+    seccion.id = "migracionTemporal";
+    seccion.style.cssText = "margin:20px auto;padding:16px;max-width:900px;background:#fff;color:#172b36;border:2px solid #b77900;border-radius:8px";
+    seccion.innerHTML = `<h2>Herramienta temporal de migración</h2>
+        <p>Se conservará localStorage como respaldo. Las estaciones existentes se omitirán por completo.</p>
+        <button type="button" data-preparar>Subir reportes guardados</button>
+        <p data-estado role="status" aria-live="polite"></p>
+        <div data-preview style="overflow-x:auto"></div>
+        <button type="button" data-confirmar hidden>Confirmar migración</button>`;
+    document.body.appendChild(seccion);
+    const preparar = seccion.querySelector("[data-preparar]");
+    const confirmar = seccion.querySelector("[data-confirmar]");
+    const estado = seccion.querySelector("[data-estado]");
+    let ocupada = false;
+    let filas = [];
+
+    function bloquear(valor) {
+        ocupada = valor;
+        preparar.disabled = valor;
+        confirmar.disabled = valor;
+    }
+    function mostrarVistaPrevia() {
+        seccion.querySelector("[data-preview]").innerHTML = `<table style="width:100%;text-align:left">
+            <caption>Vista previa: ${filas.length} reportes locales (precios en ¢/L)</caption>
+            <thead><tr><th>Estación</th><th>Regular</th><th>Premium</th><th>Diesel</th><th>Estado / motivo</th></tr></thead>
+            <tbody>${filas.map(fila => `<tr><td>${escaparHtml(fila.reporte.stationName || "Sin nombre")}</td>
+                ${["regular", "premium", "diesel"].map(tipo => `<td>${escaparHtml(fila.reporte[tipo] ?? "—")}</td>`).join("")}
+                <td>${escaparHtml(fila.estado)}</td></tr>`).join("")}</tbody></table>`;
+    }
+    preparar.addEventListener("click", async () => {
+        if (ocupada) return;
+        bloquear(true);
+        confirmar.hidden = true;
+        filas = [];
+        seccion.querySelector("[data-preview]").textContent = "";
+        estado.textContent = "Leyendo reportes locales y consultando Supabase…";
+        try {
+            // Misma key y objeto indexado por placeId que cargarReportesPrecios.
+            // Lectura estricta para no presentar datos corruptos como cero reportes.
+            const locales = JSON.parse(localStorage.getItem(CLAVE_REPORTES_PRECIOS) || "{}");
+            if (!locales || typeof locales !== "object" || Array.isArray(locales)) {
+                throw new Error("La estructura de los reportes locales no es válida.");
+            }
+            const existentes = await consultarIdsMigracion();
+            const vistos = new Set();
+            filas = Object.values(locales).map(valor => {
+                const reporte = valor && typeof valor === "object" ? valor : {};
+                const placeId = obtenerIdMigracion(reporte);
+                let mensaje = "Se va a subir";
+                if (!placeId) mensaje = "No se pudo migrar - falta Place ID";
+                else if (existentes.has(placeId)) mensaje = "Ya existe - omitido";
+                else if (vistos.has(placeId)) mensaje = "No se pudo migrar - Place ID local duplicado";
+                vistos.add(placeId);
+                return { reporte, placeId, estado: mensaje };
+            });
+            mostrarVistaPrevia();
+            estado.textContent = `${filas.length} reportes locales detectados. Revisa la vista previa antes de confirmar.`;
+            confirmar.hidden = !filas.some(fila => fila.estado === "Se va a subir");
+        } catch (error) {
+            estado.textContent = `No se preparó la migración: ${error.message}`;
+        } finally {
+            bloquear(false);
+        }
+    });
+    confirmar.addEventListener("click", async () => {
+        if (ocupada || confirmar.hidden) return;
+        bloquear(true);
+        estado.textContent = "Migración en progreso…";
+        try {
+            // Revalidar después de la confirmación, antes del primer POST.
+            const existentes = await consultarIdsMigracion();
+            for (const fila of filas) {
+                if (fila.estado !== "Se va a subir") continue;
+                if (existentes.has(fila.placeId)) {
+                    fila.estado = "Ya existe - omitido";
+                    continue;
+                }
+                try {
+                    const { stationName, brand, address, regular, premium, diesel } = fila.reporte;
+                    const respuesta = await fetch("/api/station-prices", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", "X-GasPR-Migration": "insert-only" },
+                        body: JSON.stringify({ placeId: fila.placeId, stationName, brand: brand ?? null,
+                            address: address ?? null, regular: regular ?? null, premium: premium ?? null, diesel: diesel ?? null }),
+                        signal: AbortSignal.timeout(15000)
+                    });
+                    if (respuesta.status === 409) {
+                        fila.estado = "Ya existe - omitido";
+                        existentes.add(fila.placeId);
+                        continue;
+                    }
+                    const datos = await respuesta.json();
+                    if (!respuesta.ok || !datos.ok) throw new Error(datos.message || `HTTP ${respuesta.status}`);
+                    if (obtenerIdMigracion(datos.report) !== fila.placeId) throw new Error("Respuesta de estación incorrecta");
+                    fila.estado = "Pendiente de verificación";
+                    existentes.add(fila.placeId);
+                } catch (error) {
+                    fila.estado = `No se pudo migrar - ${error.message}`;
+                }
+                mostrarVistaPrevia();
+            }
+            if (filas.some(fila => fila.estado === "Pendiente de verificación")) {
+                try {
+                    const verificados = await consultarIdsMigracion();
+                    filas.filter(fila => fila.estado === "Pendiente de verificación").forEach(fila => {
+                        fila.estado = verificados.has(fila.placeId) ? "Subido y verificado" : "No se pudo migrar - no aparece en la consulta final de Supabase";
+                    });
+                } catch (error) {
+                    filas.filter(fila => fila.estado === "Pendiente de verificación").forEach(fila => {
+                        fila.estado = `No se pudo migrar - guardado sin verificar: ${error.message}`;
+                    });
+                }
+            }
+            estado.textContent = `Migración terminada. Subidos: ${filas.filter(f => f.estado === "Subido y verificado").length}. Ya existían: ${filas.filter(f => f.estado === "Ya existe - omitido").length}. Fallaron: ${filas.filter(f => f.estado.startsWith("No se pudo migrar")).length}.`;
+        } catch (error) {
+            estado.textContent = `Migración detenida antes de subir: ${error.message}. Prepara una nueva vista previa para reintentar.`;
+        } finally {
+            mostrarVistaPrevia();
+            confirmar.hidden = true;
+            bloquear(false);
+        }
+    });
+}
+
+function obtenerIdMigracion(reporte) {
+    const id = reporte?.placeId ?? reporte?.place_id;
+    // El identificador de respaldo por coordenadas no es un Place ID.
+    return typeof id === "string" && id.trim() && id.trim().length <= 255 &&
+        !/\s/.test(id.trim()) && !id.trim().startsWith("coordenadas:") ? id.trim() : null;
+}
+
+async function consultarIdsMigracion() {
+    const respuesta = await fetch("/api/station-prices", {
+        cache: "no-store", signal: AbortSignal.timeout(15000)
+    });
+    if (!respuesta.ok) throw new Error(`No se pudieron consultar los reportes compartidos (HTTP ${respuesta.status}).`);
+    const datos = await respuesta.json();
+    if (!datos.ok || !Array.isArray(datos.reports)) throw new Error("Respuesta compartida inválida.");
+    return new Set(datos.reports.map(reporte => {
+        const id = obtenerIdMigracion(reporte);
+        if (!id) throw new Error("Un reporte compartido tiene un Place ID inválido; se canceló por seguridad.");
+        return id;
+    }));
+}
+
+iniciarMigracionTemporal();
+</script>
 </body>
 </html>

@@ -264,6 +264,11 @@ app.post("/api/station-prices", async (req, res) => {
     const existentes = await respuesta.json();
     if (!Array.isArray(existentes)) throw new Error("Respuesta inválida");
     const existe = existentes.length > 0;
+    // La herramienta temporal solo puede insertar; nunca entra en la rama PATCH.
+    const soloInsertar = req.get("X-GasPR-Migration") === "insert-only";
+    if (soloInsertar && existe) {
+      return res.status(409).json({ ok: false, message: "Ya existe - omitido" });
+    }
     const reporte = {
       station_name: datos.stationName.trim(),
       ...precios,
@@ -289,10 +294,16 @@ app.post("/api/station-prices", async (req, res) => {
     // PATCH incluye únicamente los combustibles reportados para conservar los demás.
     const guardado = await peticionSupabase(recurso, {
       method: existe ? "PATCH" : "POST",
-      headers: { "Content-Type": "application/json", Prefer: "return=representation" },
+      headers: {
+        "Content-Type": "application/json",
+        Prefer: soloInsertar ? "return=representation,resolution=ignore-duplicates" : "return=representation"
+      },
       body: JSON.stringify(reporte)
     });
     const reports = await guardado.json();
+    if (soloInsertar && guardado.ok && Array.isArray(reports) && reports.length === 0) {
+      return res.status(409).json({ ok: false, message: "Ya existe - omitido" });
+    }
     if (!Array.isArray(reports) || !reports[0]) throw new Error("Respuesta inválida");
     res.status(existe ? 200 : 201).json({ ok: true, report: reports[0] });
   } catch {
