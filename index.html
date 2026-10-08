@@ -529,7 +529,8 @@ body::before {
 
 .precio-usuario-meta {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 3px 9px;
     margin-top: 5px;
     color: #667085;
@@ -537,8 +538,22 @@ body::before {
     font-weight: 700;
 }
 
+.precio-usuario-frescura {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    line-height: 1.4;
+}
+
+.precio-usuario-frescura--reciente { color: #166534; background: #dcfce7; }
+.precio-usuario-frescura--verificar { color: #92400e; background: #fef3c7; }
+.precio-usuario-frescura--viejo { color: #991b1b; background: #fee2e2; }
+.precio-usuario-frescura--desconocida { color: #667085; background: #f2f4f7; }
+
 .precio-usuario-antiguo {
-    color: #9a6700;
+    color: #991b1b;
 }
 
 .gasolinera-acciones {
@@ -2992,23 +3007,39 @@ body::before {
         .replace(/'/g, "&#039;");
  }
 
- function textoAntiguedad(fechaIso) {
-    const fecha = new Date(fechaIso).getTime();
-    const transcurrido = Date.now() - fecha;
-
-    if (!Number.isFinite(fecha) || transcurrido < 0) {
-        return "Actualizado recientemente";
+ function calcularFrescuraReporte(reported_at) {
+    const fecha = typeof reported_at === "string" && reported_at.trim()
+        ? new Date(reported_at).getTime()
+        : NaN;
+    if (!Number.isFinite(fecha)) {
+        return {
+            estado: null,
+            texto: "Fecha del reporte desconocida",
+            claseCSS: "precio-usuario-frescura--desconocida",
+            antiguedad: null,
+            advertencia: ""
+        };
     }
 
-    const minutos = Math.floor(transcurrido / 60000);
-    if (minutos < 1) return "Actualizado ahora";
-    if (minutos < 60) return `Actualizado hace ${minutos} min`;
-
-    const horas = Math.floor(minutos / 60);
-    if (horas < 24) return `Actualizado hace ${horas} h`;
-
+    // Una fecha futura por desfase de reloj se muestra como recién reportada.
+    const antiguedad = Math.max(0, Date.now() - fecha);
+    const hora = 60 * 60 * 1000;
+    const minutos = Math.floor(antiguedad / 60000);
+    const horas = Math.floor(antiguedad / hora);
     const dias = Math.floor(horas / 24);
-    return `Actualizado hace ${dias} d`;
+    const texto = minutos < 1 ? "ahora"
+        : minutos < 60 ? `hace ${minutos} min`
+        : horas < 24 ? `hace ${horas} h`
+        : `hace ${dias} ${dias === 1 ? "día" : "días"}`;
+    const estado = antiguedad <= 6 * hora ? "Reciente"
+        : antiguedad <= 24 * hora ? "Verificar" : "Precio viejo";
+    const claseCSS = antiguedad <= 6 * hora ? "precio-usuario-frescura--reciente"
+        : antiguedad <= 24 * hora ? "precio-usuario-frescura--verificar"
+        : "precio-usuario-frescura--viejo";
+    return {
+        estado, texto, claseCSS, antiguedad,
+        advertencia: antiguedad > 72 * hora ? "Este precio puede estar desactualizado." : ""
+    };
  }
 
  function htmlReportePrecio(reporte) {
@@ -3035,14 +3066,14 @@ body::before {
         return "";
     }
 
-    const esAntiguo = Date.now() - new Date(reporte.reportedAt).getTime() > 24 * 60 * 60 * 1000;
+    const frescura = calcularFrescuraReporte(reporte.reportedAt);
     return `
       <div class="gasolinera-precios-usuario">
         ${filas}
         <div class="precio-usuario-meta">
           <span>Reportado por usuario</span>
-          <span>${textoAntiguedad(reporte.reportedAt)}</span>
-          ${esAntiguo ? '<span class="precio-usuario-antiguo">Puede haber cambiado</span>' : ""}
+          <span class="precio-usuario-frescura ${frescura.claseCSS}">${frescura.estado ? `<span aria-hidden="true">●</span> ${frescura.estado} · ` : ""}${frescura.texto}</span>
+          ${frescura.advertencia ? `<span class="precio-usuario-antiguo">${frescura.advertencia}</span>` : ""}
         </div>
       </div>
     `;
