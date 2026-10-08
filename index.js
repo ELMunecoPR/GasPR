@@ -107,6 +107,76 @@ const datos = await respuesta.json();
 return datos.features || [];
 }
 
+const MUNICIPIOS_PR = ["Adjuntas","Aguada","Aguadilla","Aguas Buenas","Aibonito","Añasco","Arecibo","Arroyo","Barceloneta","Barranquitas","Bayamón","Cabo Rojo","Caguas","Camuy","Canóvanas","Carolina","Cataño","Cayey","Ceiba","Ciales","Cidra","Coamo","Comerío","Corozal","Culebra","Dorado","Fajardo","Florida","Guánica","Guayama","Guayanilla","Guaynabo","Gurabo","Hatillo","Hormigueros","Humacao","Isabela","Jayuya","Juana Díaz","Juncos","Lajas","Lares","Las Marías","Las Piedras","Loíza","Luquillo","Manatí","Maricao","Maunabo","Mayagüez","Moca","Morovis","Naguabo","Naranjito","Orocovis","Patillas","Peñuelas","Ponce","Quebradillas","Rincón","Río Grande","Sabana Grande","Salinas","San Germán","San Juan","San Lorenzo","San Sebastián","Santa Isabel","Toa Alta","Toa Baja","Trujillo Alto","Utuado","Vega Alta","Vega Baja","Vieques","Villalba","Yabucoa","Yauco"];
+
+function normalizarMunicipio(valor) {
+  return String(valor || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase().replace(/\b(municipio de|municipality|municipio)\b/g, "")
+    .replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function perteneceAlMunicipio(estacion, municipio) {
+  const ubicacion = estacion.location;
+  if (!estacion.id || !Number.isFinite(ubicacion?.latitude) || !Number.isFinite(ubicacion?.longitude)
+      || ubicacion.latitude < 17.8 || ubicacion.latitude > 18.6
+      || ubicacion.longitude < -67.4 || ubicacion.longitude > -65.2) return false;
+  const objetivo = normalizarMunicipio(municipio);
+  const componentes = estacion.addressComponents || [];
+  const coincide = c => [c.longText, c.shortText].some(v => normalizarMunicipio(v) === objetivo);
+  // Los resultados auditados usan country=PR, nivel 1=municipio y nivel 2=barrio.
+  // Reconocer el nombre contra los 78 municipios evita asumir un nivel fijo:
+  // si nivel 1 contiene Puerto Rico, se evalúan nivel 2, localidad y dirección.
+  const paisPR = componentes.some(c => c.types?.includes("country") && c.shortText === "PR");
+  const esMunicipio = c => MUNICIPIOS_PR.some(nombre =>
+    [c.longText, c.shortText].some(v => normalizarMunicipio(v) === normalizarMunicipio(nombre)));
+  const nivel1 = componentes.filter(c => c.types?.includes("administrative_area_level_1") && esMunicipio(c));
+  if (paisPR && nivel1.length) return nivel1.some(coincide);
+  const municipales = componentes.filter(c => c.types?.includes("administrative_area_level_2")
+    && esMunicipio(c));
+  // Un municipio administrativo reconocido tiene prioridad sobre una localidad postal vecina.
+  if (municipales.length) return municipales.some(coincide);
+  if (componentes.some(c => c.types?.includes("locality") && coincide(c))) return true;
+  return String(estacion.formattedAddress || "").split(",").some(parte =>
+    normalizarMunicipio(parte).replace(/\s+(?:pr\s+)?\d{5}(?:\s+\d{4})?$/, "") === objetivo
+  );
+}
+
+async function obtenerGasolinerasMunicipio(municipio) {
+  if (!GOOGLE_MAPS_API_KEY) throw new Error("Google Places no está configurado");
+  const estaciones = new Map();
+  const consulta = {
+    textQuery: `gas stations in ${municipio}, Puerto Rico`,
+    includedType: "gas_station", strictTypeFiltering: true,
+    languageCode: "es", regionCode: "PR", pageSize: 20
+  };
+  let pageToken;
+  for (let pagina = 0; pagina < 3; pagina++) {
+    const respuesta = await fetch("https://places.googleapis.com/v1/places:searchText", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", "X-Goog-Api-Key": GOOGLE_MAPS_API_KEY,
+        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location,places.addressComponents,nextPageToken"
+      },
+      body: JSON.stringify({ ...consulta, ...(pageToken ? { pageToken } : {}) }),
+      signal: AbortSignal.timeout(15000)
+    });
+    if (!respuesta.ok) throw new Error("Falló la búsqueda de Google Places");
+    const datos = await respuesta.json();
+    if (datos.error || (datos.places != null && !Array.isArray(datos.places))) {
+      throw new Error("Respuesta inválida de Google Places");
+    }
+    for (const estacion of datos.places || []) {
+      if (perteneceAlMunicipio(estacion, municipio)) {
+        const { id, displayName, formattedAddress, location } = estacion;
+        estaciones.set(id, { id, displayName, formattedAddress, location });
+      }
+    }
+    pageToken = datos.nextPageToken;
+    if (!pageToken) break;
+  }
+  return [...estaciones.values()];
+}
+
 async function obtenerPrecios() {
 
   const urlGeneral = "https://www.daco.pr.gov/?53e8dab1_page=3&a551dcf7_page=2";
@@ -332,6 +402,17 @@ app.get("/api/gasolineras-google", async (req, res) => {
     });
   }
 });
+app.get("/api/gasolineras-municipio", async (req, res) => {
+  const municipio = MUNICIPIOS_PR.find(nombre => normalizarMunicipio(nombre) === normalizarMunicipio(req.query.municipio));
+  if (!municipio) return res.status(400).json({ error: "Selecciona un municipio válido de Puerto Rico." });
+  try {
+    res.json(await obtenerGasolinerasMunicipio(municipio));
+  } catch {
+    res.status(502).json({ error: "No se pudieron buscar las gasolineras. Intenta nuevamente." });
+  }
+});
+
+// Ruta antigua de ArcGIS, conservada por compatibilidad; el selector ya no la utiliza.
 app.get("/api/gasolineras", async (req, res) => {
   try {
     const todas = req.query.todas === "1";

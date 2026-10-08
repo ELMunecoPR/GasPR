@@ -3395,31 +3395,40 @@ document.getElementById("marcaPopup").addEventListener("click", (evento) => {
       let ubicacionBusquedaActual = null;
       let estacionReporteActiva = null;
       let temporizadorToast = null;
+      let solicitudBusquedaActual = 0;
      async function cargarGasolineras() {
-        const municipioSeleccionado = document.getElementById("municipio").value;
-
-  if (!municipioSeleccionado) {
-    return;
-  }
-  const municipio = document.getElementById("municipio").value;
-  const respuesta = await fetch(`/api/gasolineras?municipio=${municipio}`);
-  const gasolineras = await respuesta.json();
-  gasolinerasActuales = gasolineras;
-  document.getElementById("contadorGasolineras").textContent =
-  `${gasolineras.length} gasolineras en ${municipio}`;
-  
+  const select = document.getElementById("municipio");
+  const municipio = select.value;
+  if (!municipio) return;
+  const solicitud = ++solicitudBusquedaActual;
+  const nombre = select.selectedOptions[0].textContent;
+  const contador = document.getElementById("contadorGasolineras");
   const contenedor = document.getElementById("gasolineras");
-  contenedor.innerHTML = gasolineras
-  .map(estacion => `
-  <div class="marca">
-    <strong>${estacion.attributes.Name}</strong><br>
-    ${estacion.attributes.City}<br>
-    <a href="https://www.google.com/maps?q=${estacion.attributes.GPS_Latitu},${estacion.attributes.GPS_Longit}" target="_blank"class="boton-mapa">
-      Ver en mapa
-    </a>
-  </div>
-`)
-  .join("");
+  contador.textContent = `Buscando gasolineras en ${nombre}...`;
+  contenedor.innerHTML = "";
+  gasolinerasActuales = [];
+  try {
+    const respuesta = await fetch(`/api/gasolineras-municipio?municipio=${encodeURIComponent(nombre)}`);
+    if (!respuesta.ok) throw new Error("No se pudo buscar");
+    const estaciones = await respuesta.json();
+    if (!Array.isArray(estaciones)) throw new Error("Respuesta inválida");
+    if (solicitud !== solicitudBusquedaActual) return;
+    gasolinerasActuales = estaciones;
+    if (ubicacionBusquedaActual) {
+      const { latitud, longitud } = ubicacionBusquedaActual;
+      gasolinerasActuales = estaciones.map(estacion => ({
+        ...estacion,
+        distancia: calcularDistancia(latitud, longitud, estacion.location.latitude, estacion.location.longitude)
+      })).sort((a, b) => a.distancia - b.distancia);
+    }
+    contador.textContent = estaciones.length
+      ? `${estaciones.length} gasolineras en ${nombre.toLocaleUpperCase("es-PR")}`
+      : "No encontramos gasolineras en este municipio.";
+    renderizarGasolinerasCercanas();
+  } catch {
+    if (solicitud !== solicitudBusquedaActual) return;
+    contador.textContent = "No se pudieron buscar las gasolineras. Intenta nuevamente.";
+  }
 }
 function calcularDistancia(lat1, lon1, lat2, lon2) {
   const R = 3958.8;
@@ -3438,14 +3447,17 @@ function calcularDistancia(lat1, lon1, lat2, lon2) {
 }
 
 function renderizarGasolinerasCercanas() {
-  if (!ubicacionBusquedaActual) {
-    return;
-  }
-
-  const { latitud, longitud } = ubicacionBusquedaActual;
   const contenedor = document.getElementById("gasolineras");
   contenedor.innerHTML = gasolinerasActuales
-    .map((estacion, index) => {
+    .map((estacion, index) => renderizarTarjetaGasolinera(estacion, index))
+    .join("");
+}
+
+function renderizarTarjetaGasolinera(estacion, index) {
+      const { latitud, longitud } = ubicacionBusquedaActual || {};
+      const tieneDistancia = !!ubicacionBusquedaActual && Number.isFinite(estacion.distancia);
+      const esMasCercana = tieneDistancia && index === 0;
+      const origen = ubicacionBusquedaActual ? `&origin=${latitud}%2C${longitud}` : "";
       const nombre = estacion.displayName?.text || "Gasolinera";
       const direccion = estacion.formattedAddress || "Dirección no disponible";
       const placeId = estacion.id || `coordenadas:${estacion.location.latitude},${estacion.location.longitude}`;
@@ -3456,19 +3468,19 @@ function renderizarGasolinerasCercanas() {
         : '<span class="gasolinera-logo-neutral" aria-hidden="true">⛽</span>';
 
       return `
-        <div class="gasolinera-cercana gasolinera-cercana--${identidad.tema} ${index === 0 ? "mas-cercana" : ""}" data-place-id="${escaparHtml(placeId)}">
+        <div class="gasolinera-cercana gasolinera-cercana--${identidad.tema} ${esMasCercana ? "mas-cercana" : ""}" data-place-id="${escaparHtml(placeId)}">
           <div class="gasolinera-encabezado">
             <div class="gasolinera-logo-contenedor">${logo}</div>
             <div class="gasolinera-resumen">
-              ${index === 0 ? '<div class="etiqueta-cercana">Más cercana</div>' : ''}
+              ${esMasCercana ? '<div class="etiqueta-cercana">Más cercana</div>' : ''}
               <strong class="gasolinera-nombre">${escaparHtml(nombre)}</strong>
-              <span class="gasolinera-distancia">${estacion.distancia.toFixed(2)} millas</span>
+              ${tieneDistancia ? `<span class="gasolinera-distancia">${estacion.distancia.toFixed(2)} millas</span>` : ""}
             </div>
           </div>
           <span class="gasolinera-direccion">${escaparHtml(direccion)}</span>
           ${htmlReportePrecio(reporte)}
           <div class="gasolinera-acciones">
-            <a class="gasolinera-como-llegar" href="https://www.google.com/maps/dir/?api=1&origin=${latitud}%2C${longitud}&destination=${estacion.location.latitude}%2C${estacion.location.longitude}&travelmode=driving" target="_blank" rel="noopener noreferrer">
+            <a class="gasolinera-como-llegar" href="https://www.google.com/maps/dir/?api=1${origen}&destination=${estacion.location.latitude}%2C${estacion.location.longitude}&travelmode=driving" target="_blank" rel="noopener noreferrer">
               Cómo llegar
             </a>
             <button class="gasolinera-reportar" type="button" data-place-id="${escaparHtml(placeId)}">
@@ -3477,8 +3489,6 @@ function renderizarGasolinerasCercanas() {
           </div>
         </div>
       `;
-    })
-    .join("");
 }
 
 function cerrarModalReporte() {
@@ -3515,7 +3525,8 @@ async function abrirModalReporte(estacion) {
   document.getElementById("reporteEstacionNombre").textContent = nombre;
   document.getElementById("reporteEstacionDireccion").textContent = direccion;
   document.getElementById("reporteEstacionDistancia").textContent =
-    `${estacion.distancia.toFixed(2)} millas de tu ubicación`;
+    Number.isFinite(estacion.distancia) && ubicacionBusquedaActual
+      ? `${estacion.distancia.toFixed(2)} millas de tu ubicación` : "";
   valorInputReporte("reporteRegular", reporte?.regular);
   valorInputReporte("reportePremium", reporte?.premium);
   valorInputReporte("reporteDiesel", reporte?.diesel);
@@ -3564,7 +3575,9 @@ const cargaReportesCompartidos = cargarReportesCompartidos();
 cargarGasolineras();
 document.getElementById("municipio").addEventListener("change", cargarGasolineras);
 document.getElementById("cercaDeMi").addEventListener("click", () => {
+  const solicitud = ++solicitudBusquedaActual;
   navigator.geolocation.getCurrentPosition(async posicion => {
+    if (solicitud !== solicitudBusquedaActual) return;
     const latitudUsuario = posicion.coords.latitude;
     const longitudUsuario = posicion.coords.longitude;
     ubicacionBusquedaActual = {
@@ -3577,7 +3590,9 @@ municipioSelect.value = "";
     const respuesta = await fetch(
   `/api/gasolineras-google?lat=${latitudUsuario}&lng=${longitudUsuario}`
 );
-gasolinerasActuales = await respuesta.json();
+const estacionesCercanas = await respuesta.json();
+if (solicitud !== solicitudBusquedaActual) return;
+gasolinerasActuales = estacionesCercanas;
 
 gasolinerasActuales = gasolinerasActuales
   .map(estacion => {
